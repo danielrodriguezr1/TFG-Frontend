@@ -4,14 +4,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:tfgapp/src/pages/signupScreen.dart';
 
-class LoginPage extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
+  static String nickname = '';
+  static String name = '';
+  static String lastname = '';
   static String email = '';
   static String pwd = '';
   bool isHiddenPassword = true;
@@ -30,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: size.height,
                   child: Image.asset(
-                    'assets/images/coco.jpg',
+                    'assets/images/lalaland.jpg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),
@@ -41,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: SizedBox(),
                       ),
                       Expanded(
-                        flex: 4,
+                        flex: 6,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: BackdropFilter(
@@ -54,15 +56,144 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      top: size.width * .15,
+                                      top: size.width * .13,
                                       bottom: size.width * .1,
                                     ),
                                     child: Text(
-                                      'BIENVENIDO',
+                                      'Únete ahora',
+                                      textAlign: TextAlign.left,
                                       style: TextStyle(
-                                        fontSize: 35,
+                                        fontSize: 30,
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white.withOpacity(.8),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: size.width * .05,
+                                      ),
+                                      height: size.width / 8,
+                                      width: size.width / 1.25,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: TextField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'^[A-Za-z0-9_.]+$'))
+                                        ],
+                                        onChanged: (val) => setState(() {
+                                          nickname = val;
+                                          print(nickname);
+                                          //debugPrint(nickname);
+                                        }),
+                                        decoration: InputDecoration(
+                                          icon: Icon(Icons.movie_rounded,
+                                              color: Colors.white70, size: 25),
+                                          border: InputBorder.none,
+                                          hintText: 'Nombre de usuario',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade400,
+                                              fontSize: 15),
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: size.width * .05,
+                                      ),
+                                      height: size.width / 8,
+                                      width: size.width / 1.25,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: TextField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[a-zA-Z]"))
+                                        ],
+                                        onChanged: (val) => setState(() {
+                                          name = val;
+                                          print(name);
+                                          //debugPrint(nickname);
+                                        }),
+                                        decoration: InputDecoration(
+                                          icon: Icon(Icons.person_rounded,
+                                              color: Colors.white70, size: 25),
+                                          border: InputBorder.none,
+                                          hintText: 'Nombre',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade400,
+                                              fontSize: 15),
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: size.width * .05,
+                                      ),
+                                      height: size.width / 8,
+                                      width: size.width / 1.25,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: TextField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[a-zA-Z]"))
+                                        ],
+                                        onChanged: (val) => setState(() {
+                                          lastname = val;
+                                          print(lastname);
+                                          //debugPrint(nickname);
+                                        }),
+                                        decoration: InputDecoration(
+                                          icon: Icon(
+                                              Icons.person_add_alt_1_rounded,
+                                              color: Colors.white70,
+                                              size: 25),
+                                          border: InputBorder.none,
+                                          hintText: 'Apellido',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade400,
+                                              fontSize: 15),
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -89,10 +220,10 @@ class _LoginPageState extends State<LoginPage> {
                                         onChanged: (val) => setState(() {
                                           email = val;
                                           print(email);
-                                          debugPrint(email);
+                                          //debugPrint(nickname);
                                         }),
                                         decoration: InputDecoration(
-                                          icon: Icon(Icons.account_circle_sharp,
+                                          icon: Icon(Icons.email,
                                               color: Colors.white70, size: 25),
                                           border: InputBorder.none,
                                           hintText: 'Correo electrónico',
@@ -160,10 +291,14 @@ class _LoginPageState extends State<LoginPage> {
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onTap: () => email != '' && pwd != ''
+                                    onTap: () => email != '' ||
+                                            name != '' ||
+                                            lastname != '' ||
+                                            nickname != '' ||
+                                            pwd != ''
                                         ? setState(() {
-                                            print('entrando al logi');
-                                            _submitLogin();
+                                            print('entrando al signup');
+                                            _submitSignup();
                                           })
                                         : () {},
                                     child: Container(
@@ -178,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
-                                        'Entrar',
+                                        'Registrarse',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
@@ -187,39 +322,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                   ),
-                                  InkWell(
-                                    splashColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () {
-                                      HapticFeedback.lightImpact();
-                                      Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                              pageBuilder: (_, __, ___) =>
-                                                  SignupPage()));
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                        bottom: size.width * .05,
-                                      ),
-                                      height: size.width / 8,
-                                      width: size.width / 1.25,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(.1),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        'Crear una cuenta',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
+                                  /*Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
@@ -241,8 +344,8 @@ class _LoginPageState extends State<LoginPage> {
                                               },
                                           ),
                                         )
-                                      ]),
-                                  SizedBox(height: size.width * .2),
+                                      ]),*/
+                                  //SizedBox(height: size.width * .1),
                                 ],
                               ),
                             ),
@@ -263,25 +366,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _submitLogin() {
+  void _submitSignup() {
     HapticFeedback.lightImpact();
-    print('intento');
-    var url = Uri.parse('https://api-danielrodriguezr1.herokuapp.com/login');
+    var url = Uri.parse('https://api-danielrodriguezr1.herokuapp.com/signup');
     http.post(url, body: {
+      'name': name,
+      'lastname': lastname,
       'email': email,
+      'nickname': nickname,
       'password': pwd,
     }).then((res) {
-      if (res.statusCode == 200) {
+      if (res.statusCode == 201) {
         print(email);
-        print('logueado');
+        print('creado');
         Fluttertoast.showToast(
-          msg: 'Logueado correctamente',
+          msg: 'Usuario creado correctamente',
         );
-      } else if (res.statusCode == 404 || res.statusCode == 401) {
+      } else if (res.statusCode == 409) {
         Fluttertoast.showToast(
-          msg: 'Credenciales incorrectas',
+          msg: 'El correo ya está en uso',
+        );
+      } else if (res.statusCode == 404) {
+        Fluttertoast.showToast(
+          msg: 'El nombre de usuario ya está en uso',
         );
       } else {
+        print(res.statusCode);
         Fluttertoast.showToast(msg: 'Error de red');
       }
     });
@@ -290,41 +400,6 @@ class _LoginPageState extends State<LoginPage> {
   void _togglePasswordView() {
     isHiddenPassword = !isHiddenPassword;
     setState(() {});
-  }
-
-  Widget component(
-      IconData icon, String hintText, bool isPassword, bool isEmail) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      height: size.width / 8,
-      width: size.width / 1.25,
-      alignment: Alignment.center,
-      padding: EdgeInsets.only(right: size.width / 30),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: TextField(
-        style: TextStyle(
-          color: Colors.white.withOpacity(.9),
-        ),
-        obscureText: isPassword,
-        keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
-        decoration: InputDecoration(
-          prefixIcon: Icon(
-            icon,
-            color: Colors.white.withOpacity(.8),
-          ),
-          border: InputBorder.none,
-          hintMaxLines: 1,
-          hintText: hintText,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            color: Colors.white.withOpacity(.5),
-          ),
-        ),
-      ),
-    );
   }
 }
 
