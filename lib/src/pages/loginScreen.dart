@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/signupScreen.dart';
+import 'package:tfgapp/src/storage/secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -274,9 +277,21 @@ class _LoginPageState extends State<LoginPage> {
       if (res.statusCode == 200) {
         print(email);
         print('logueado');
+
+        Map<String, dynamic> body = jsonDecode(res.body);
+        print(body["token"]);
+        print(body["userId"]);
+        SecureStorage.writeSecureStorage('App_Token', body["token"]);
+        SecureStorage.writeSecureStorage('App_UserID', body["userId"]);
+
+        print("escrito");
+
         Fluttertoast.showToast(
           msg: 'Logueado correctamente',
         );
+
+        Navigator.push(context,
+            PageRouteBuilder(pageBuilder: (_, __, ___) => HomeScreen()));
       } else if (res.statusCode == 404 || res.statusCode == 401) {
         Fluttertoast.showToast(
           msg: 'Credenciales incorrectas',

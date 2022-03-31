@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:tfgapp/src/pages/homeScreen.dart';
+import 'package:tfgapp/src/storage/secure_storage.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -379,9 +383,20 @@ class _SignupPageState extends State<SignupPage> {
       if (res.statusCode == 201) {
         print(email);
         print('creado');
+
+        Map<String, dynamic> body = jsonDecode(res.body);
+        print(body["token"]);
+        print(body["userId"]);
+        SecureStorage.writeSecureStorage('App_Token', body["token"]);
+        SecureStorage.writeSecureStorage('App_UserId', body["userId"]);
+        print("escrito");
+
         Fluttertoast.showToast(
           msg: 'Usuario creado correctamente',
         );
+
+        Navigator.push(context,
+            PageRouteBuilder(pageBuilder: (_, __, ___) => HomeScreen()));
       } else if (res.statusCode == 409) {
         Fluttertoast.showToast(
           msg: 'El correo ya está en uso',
