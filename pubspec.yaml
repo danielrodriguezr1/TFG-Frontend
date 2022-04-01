@@ -32,6 +32,7 @@ dependencies:
   fluttertoast: ^8.0.9
   flutter_secure_storage: ^4.1.0
   http: ^0.13.3
+  sweetalertv2: any
 
 dev_dependencies:
   flutter_test:

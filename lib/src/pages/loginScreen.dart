@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tfgapp/src/pages/homeScreen.dart';
+import 'package:tfgapp/src/pages/recoverScreen.dart';
 import 'package:tfgapp/src/pages/signupScreen.dart';
 import 'package:tfgapp/src/storage/secure_storage.dart';
 
@@ -237,10 +238,12 @@ class _LoginPageState extends State<LoginPage> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 HapticFeedback.lightImpact();
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      'Forgotten password! button pressed',
-                                                );
+                                                Navigator.push(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                        pageBuilder:
+                                                            (_, __, ___) =>
+                                                                RecoverPage()));
                                               },
                                           ),
                                         )
