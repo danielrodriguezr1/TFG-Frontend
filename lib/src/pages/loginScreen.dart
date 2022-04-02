@@ -272,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
   void _submitLogin() {
     HapticFeedback.lightImpact();
     print('intento');
-    var url = Uri.parse('https://api-danielrodriguezr1.herokuapp.com/login');
+    var url = Uri.parse('https://api-danielrodriguez.herokuapp.com/login');
     http.post(url, body: {
       'email': email,
       'password': pwd,

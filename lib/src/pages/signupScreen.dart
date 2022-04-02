@@ -372,7 +372,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void _submitSignup() {
     HapticFeedback.lightImpact();
-    var url = Uri.parse('https://api-danielrodriguezr1.herokuapp.com/signup');
+    var url = Uri.parse('https://api-danielrodriguez.herokuapp.com/signup');
     http.post(url, body: {
       'name': name,
       'lastname': lastname,
