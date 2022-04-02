@@ -21,6 +21,7 @@ class ResetPasswordPage extends StatefulWidget {
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   static String newPwd = '';
   static String code = '';
+  bool isHiddenPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +160,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                           FilteringTextInputFormatter.allow(RegExp(
                                               r'^[A-Za-z0-9!#$%&*/=?^_+-`{|}~]+$'))
                                         ],
+                                        obscureText: isHiddenPassword,
                                         onChanged: (val) => setState(() {
                                           newPwd = val;
                                           print(newPwd);
@@ -167,6 +169,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                         decoration: InputDecoration(
                                           icon: Icon(Icons.lock_rounded,
                                               color: Colors.white70, size: 25),
+                                          suffixIcon: InkWell(
+                                            onTap: _togglePasswordView,
+                                            child: Icon(Icons.visibility,
+                                                color: Colors.white70,
+                                                size: 25),
+                                          ),
                                           border: InputBorder.none,
                                           hintText: 'Nueva contraseña',
                                           hintStyle: TextStyle(
@@ -237,6 +245,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         ),
       ),
     );
+  }
+
+  void _togglePasswordView() {
+    isHiddenPassword = !isHiddenPassword;
+    setState(() {});
   }
 
   void _submitNewPassword(String code) {
