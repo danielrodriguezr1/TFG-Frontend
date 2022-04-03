@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/loginScreen.dart';
 import 'package:flutter/services.dart';
-import 'package:tfgapp/src/pages/signupScreen.dart';
-
 import 'src/storage/secure_storage.dart';
 
 bool loggedIn;
@@ -15,9 +13,9 @@ Future<void> main() async {
       (value) => {if (value != null) loggedIn = true else loggedIn = false});
 
   if (loggedIn)
-    print('TFG APP');
+    print('Ya logueado');
   else
-    print('dfsdfgfgfgdfg');
+    print('No logueado aun');
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

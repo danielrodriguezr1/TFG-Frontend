@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -217,6 +216,7 @@ class _SignupPageState extends State<SignupPage> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: TextField(
+                                        enableSuggestions: true,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(RegExp(
                                               r'^[A-Za-z0-9!#$%&*/=?^_+-`{|}~]+$'))
