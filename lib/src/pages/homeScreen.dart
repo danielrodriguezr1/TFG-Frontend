@@ -16,8 +16,15 @@ import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_state.dart';
 import 'package:tfgapp/src/models/movie.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/tv.dart';
+import 'package:tfgapp/src/pages/searchScreen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _paginaActual = 1;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -49,10 +56,21 @@ class HomeScreen extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.bold)))),
         bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              _paginaActual = index;
+              if (_paginaActual == 0) {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => SearchScreen()));
+              } else if (_paginaActual == 1) {}
+            });
+          },
           backgroundColor: Color(0xFF151C26),
           selectedItemColor: Color(0xFFF4C10F),
           unselectedItemColor: Color(0xFF5A606B),
-          currentIndex: 1,
+          currentIndex: _paginaActual,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: Icon(Icons.search_rounded), label: "Buscar"),
@@ -173,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                                 ClipRRect(
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        'https://image.tmdb.org/t/p/original/${movie.posterPath}',
+                                        'https://image.tmdb.org/t/p/original/${movie.poster}',
                                     height:
                                         MediaQuery.of(context).size.height / 3,
                                     width: MediaQuery.of(context).size.width,

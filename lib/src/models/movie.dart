@@ -5,12 +5,12 @@ class Movie {
   final String originalTitle;
   final String overview;
   //final int popularity;
-  final String posterPath;
   final String releaseDate;
   final String title;
   final bool video;
   final int voteCount;
   final String voteAverage;
+  final String poster;
 
   String error;
 
@@ -21,12 +21,12 @@ class Movie {
       this.originalTitle,
       this.overview,
       //this.popularity,
-      this.posterPath,
       this.releaseDate,
       this.title,
       this.video,
       this.voteCount,
-      this.voteAverage});
+      this.voteAverage,
+      this.poster});
 
   factory Movie.fromJson(dynamic json) {
     if (json == null) {
@@ -40,11 +40,13 @@ class Movie {
         originalTitle: json['original_title'],
         overview: json['overview'],
         //popularity: json['popularity'],
-        posterPath: json['poster_path'],
         releaseDate: json['release_date'],
         title: json['title'],
         video: json['video'],
         voteCount: json['vote_count'],
-        voteAverage: json['vote_average'].toString());
+        voteAverage: json['vote_average'].toString(),
+        poster: json['poster_path'] != null
+            ? "https://image.tmdb.org/t/p/w500" + json['poster_path']
+            : "https://images.pexels.com/photos/4089658/pexels-photo-4089658.jpeg?cs=srgb&dl=pexels-victoria-borodinova-4089658.jpg&fm=jpg");
   }
 }

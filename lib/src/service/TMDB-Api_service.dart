@@ -65,4 +65,19 @@ class TMDBApiService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<List<Movie>> findByTitle(String title) async {
+    try {
+      final url =
+          '$baseUrl/search/movie?$apiKey&language=es-ES&query=$title&page=1&include_adult=true';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      var movie = response.data['results'] as List;
+      List<Movie> movieList = movie.map((m) => Movie.fromJson(m)).toList();
+      return movieList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }
