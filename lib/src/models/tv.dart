@@ -5,12 +5,12 @@ class TV {
   final String originalName;
   final String overview;
   //final int popularity;
-  final String posterPath;
   final String releaseDate;
   final String name;
   final bool video;
   final int voteCount;
   final String voteAverage;
+  final String poster;
 
   String error;
 
@@ -21,12 +21,12 @@ class TV {
       this.originalName,
       this.overview,
       //this.popularity,
-      this.posterPath,
       this.releaseDate,
       this.name,
       this.video,
       this.voteCount,
-      this.voteAverage});
+      this.voteAverage,
+      this.poster});
 
   factory TV.fromJson(dynamic json) {
     if (json == null) {
@@ -40,11 +40,13 @@ class TV {
         originalName: json['original_name'],
         overview: json['overview'],
         //popularity: json['popularity'],
-        posterPath: json['poster_path'],
-        releaseDate: json['release_date'],
+        releaseDate: json['first_air_date'],
         name: json['name'],
         video: json['video'],
         voteCount: json['vote_count'],
-        voteAverage: json['vote_average'].toString());
+        voteAverage: json['vote_average'].toString(),
+        poster: json['poster_path'] != null
+            ? "https://image.tmdb.org/t/p/w500" + json['poster_path']
+            : "https://images.pexels.com/photos/11760757/pexels-photo-11760757.png?auto=compress&cs=tinysrgb&h=750&w=1260");
   }
 }

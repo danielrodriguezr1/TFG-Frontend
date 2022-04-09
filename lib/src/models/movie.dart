@@ -47,6 +47,6 @@ class Movie {
         voteAverage: json['vote_average'].toString(),
         poster: json['poster_path'] != null
             ? "https://image.tmdb.org/t/p/w500" + json['poster_path']
-            : "https://images.pexels.com/photos/4089658/pexels-photo-4089658.jpeg?cs=srgb&dl=pexels-victoria-borodinova-4089658.jpg&fm=jpg");
+            : "https://images.pexels.com/photos/11760757/pexels-photo-11760757.png?auto=compress&cs=tinysrgb&h=750&w=1260");
   }
 }

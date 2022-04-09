@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:tfgapp/src/pages/homeScreen.dart';
 
+// ignore: must_be_immutable
 class ResetPasswordPage extends StatefulWidget {
   String codi;
   String token;
@@ -37,7 +38,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 SizedBox(
                   height: size.height,
                   child: Image.asset(
-                    'assets/images/lalaland.jpg',
+                    'assets/images/breakingbad.jpg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),

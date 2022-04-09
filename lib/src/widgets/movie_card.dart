@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 //import '../animation.dart';
 //import '../constants.dart';
 //import '../screens/movie_info_screen/movie_Info_screen.dart';
@@ -74,7 +74,7 @@ class MovieCard extends StatelessWidget {
                       ),*/
                     ),
                     Text(
-                      date,
+                      date.substring(0, 4),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       /*style: normalText.copyWith(
@@ -117,6 +117,8 @@ class HorizontalMovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var nota = rate.toString();
+    print('Nota: $nota');
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
@@ -183,7 +185,7 @@ class HorizontalMovieCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      date,
+                      date.substring(0, 4),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -192,27 +194,38 @@ class HorizontalMovieCard extends StatelessWidget {
                         color: Colors.white70,
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    /*Row(
-                      children: [
-                        IconTheme(
-                          data: const IconThemeData(
-                            color: Colors.cyanAccent,
-                            size: 20,
+                    const SizedBox(height: 15),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          RatingBar.builder(
+                            itemSize: 8,
+                            initialRating: (rate / 2),
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            unratedColor: Colors.grey,
+                            itemCount: 5,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 2),
+                            itemBuilder: (context, _) {
+                              return const Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              );
+                            },
+                            onRatingUpdate: (rating) {},
                           ),
-                          child: StarDisplay(
-                            value: ((rate * 5) / 10).round(),
-                          ),
-                        ),
-                        Text(
-                          "  " + rate.toString() + "/10",
-                          style: normalText.copyWith(
-                            color: Colors.amber,
-                            letterSpacing: 1.2,
-                          ),
-                        )
-                      ],
-                    ),*/
+                          Padding(padding: EdgeInsets.only(right: 10)),
+                          Text(
+                            rate.toString(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

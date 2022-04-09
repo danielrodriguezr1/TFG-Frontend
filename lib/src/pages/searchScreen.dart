@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,17 +6,11 @@ import 'package:tfgapp/src/bloc/moviebloc/popularTV_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/popular_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/movie_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/movie_bloc_event.dart';
-import 'package:tfgapp/src/bloc/moviebloc/movie_bloc_state.dart';
 import 'package:tfgapp/src/bloc/moviebloc/topRated_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_event.dart';
-import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_state.dart';
 import 'package:tfgapp/src/cubit/search_results_cubit.dart';
-import 'package:tfgapp/src/models/movie.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
-import 'package:tfgapp/src/service/TMDB-Api_service.dart';
 
 class SearchScreen extends StatefulWidget {
   @override

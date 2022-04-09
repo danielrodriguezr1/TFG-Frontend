@@ -114,7 +114,7 @@ class _SearchResultsState extends State<SearchResults> {
                                 id: movie.id.toString(),
                                 name: movie.title,
                                 poster: movie.poster,
-                                //rate: movie.voteAverage,
+                                rate: double.parse(movie.voteAverage),
                               ),
                             ),
                             if (state.movieStatus == MovieStatus.adding)
@@ -158,8 +158,8 @@ class _SearchResultsState extends State<SearchResults> {
                                 isMovie: false,
                                 id: movie.id.toString(),
                                 name: movie.name,
-                                //poster: movie.poster,
-                                //rate: movie.voteAverage,
+                                poster: movie.poster,
+                                rate: double.parse(movie.voteAverage),
                               ),
                             ),
                             if (state.tvStatus == TvStatus.adding)
@@ -227,18 +227,14 @@ class _SearchResultsState extends State<SearchResults> {
                                                     child: SizedBox(
                                                       width: 20,
                                                       height: 20,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                              //color: Colors
-                                                              //.grey.shade700,
-                                                              backgroundColor:
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .primaryColor,
-                                                              strokeWidth: 1,
-                                                              value:
-                                                                  downloadProgress
-                                                                      .progress),
+                                                      child: CircularProgressIndicator(
+                                                          backgroundColor:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                          strokeWidth: 1,
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
                                                     ),
                                                   ),
                                                 ),
@@ -265,7 +261,6 @@ class _SearchResultsState extends State<SearchResults> {
                                 Center(
                                   child: CircularProgressIndicator(
                                     backgroundColor: Colors.grey.shade700,
-                                    //color: Theme.of(context).primaryColor,
                                   ),
                                 )
                             ],

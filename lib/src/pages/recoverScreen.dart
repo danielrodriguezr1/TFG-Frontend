@@ -30,7 +30,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 SizedBox(
                   height: size.height,
                   child: Image.asset(
-                    'assets/images/lalaland.jpg',
+                    'assets/images/twinpeaks.jpg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),

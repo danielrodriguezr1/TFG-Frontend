@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:tfgapp/src/models/people.dart';
-
 import 'package:tfgapp/src/service/TMDB-Api-Service-Search.dart';
 import 'package:tfgapp/src/models/people.dart';
 import 'package:tfgapp/src/models/movie.dart';

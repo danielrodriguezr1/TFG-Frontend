@@ -12,7 +12,7 @@ class People {
       name: json['name'] ?? "",
       profile: json['profile_path'] != null
           ? "https://image.tmdb.org/t/p/w500" + json['profile_path']
-          : "https://images.unsplash.com/photo-1503249023995-51b0f3778ccf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=311&q=80",
+          : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
       id: json['id'].toString(),
     );
   }
