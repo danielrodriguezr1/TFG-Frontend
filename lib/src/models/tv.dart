@@ -40,7 +40,7 @@ class TV {
         originalName: json['original_name'],
         overview: json['overview'],
         //popularity: json['popularity'],
-        releaseDate: json['first_air_date'],
+        releaseDate: json['first_air_date'] ?? '',
         name: json['name'],
         video: json['video'],
         voteCount: json['vote_count'],

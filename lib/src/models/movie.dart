@@ -40,7 +40,7 @@ class Movie {
         originalTitle: json['original_title'],
         overview: json['overview'],
         //popularity: json['popularity'],
-        releaseDate: json['release_date'],
+        releaseDate: json['release_date'] ?? '',
         title: json['title'],
         video: json['video'],
         voteCount: json['vote_count'],

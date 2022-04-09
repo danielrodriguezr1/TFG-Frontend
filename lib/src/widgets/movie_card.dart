@@ -74,7 +74,7 @@ class MovieCard extends StatelessWidget {
                       ),*/
                     ),
                     Text(
-                      date.substring(0, 4),
+                      date,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       /*style: normalText.copyWith(
@@ -185,7 +185,7 @@ class HorizontalMovieCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      date.substring(0, 4),
+                      date,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

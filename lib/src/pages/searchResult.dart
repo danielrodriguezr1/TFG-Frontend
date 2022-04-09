@@ -109,7 +109,9 @@ class _SearchResultsState extends State<SearchResults> {
                               (movie) => HorizontalMovieCard(
                                 backdrop: movie.backdropPath,
                                 color: Colors.white,
-                                date: movie.releaseDate,
+                                date: (movie.releaseDate != '')
+                                    ? movie.releaseDate.substring(0, 4)
+                                    : movie.releaseDate,
                                 isMovie: true,
                                 id: movie.id.toString(),
                                 name: movie.title,
