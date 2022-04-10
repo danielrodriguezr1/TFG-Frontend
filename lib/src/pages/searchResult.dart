@@ -116,7 +116,9 @@ class _SearchResultsState extends State<SearchResults> {
                                 id: movie.id.toString(),
                                 name: movie.title,
                                 poster: movie.poster,
-                                rate: double.parse(movie.voteAverage),
+                                rate: (double.parse(movie.voteAverage) != 0)
+                                    ? movie.voteAverage
+                                    : '',
                               ),
                             ),
                             if (state.movieStatus == MovieStatus.adding)
@@ -161,7 +163,9 @@ class _SearchResultsState extends State<SearchResults> {
                                 id: movie.id.toString(),
                                 name: movie.name,
                                 poster: movie.poster,
-                                rate: double.parse(movie.voteAverage),
+                                rate: (double.parse(movie.voteAverage) != 0)
+                                    ? movie.voteAverage
+                                    : '',
                               ),
                             ),
                             if (state.tvStatus == TvStatus.adding)
@@ -200,7 +204,7 @@ class _SearchResultsState extends State<SearchResults> {
                               crossAxisCount: 2,
                             ),
                             children: [
-                              if (state.shows.isEmpty) const NoResultsFound(),
+                              if (state.people.isEmpty) const NoResultsFound(),
                               ...state.people.map((movie) => Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: InkWell(

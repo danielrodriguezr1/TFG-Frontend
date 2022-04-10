@@ -99,7 +99,7 @@ class HorizontalMovieCard extends StatelessWidget {
   final String name;
   final String backdrop;
   final String date;
-  final double rate;
+  final String rate;
   final String id;
   final Color color;
   final bool isMovie;
@@ -198,27 +198,31 @@ class HorizontalMovieCard extends StatelessWidget {
                     Container(
                       child: Row(
                         children: <Widget>[
-                          RatingBar.builder(
-                            itemSize: 8,
-                            initialRating: (rate / 2),
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            unratedColor: Colors.grey,
-                            itemCount: 5,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 2),
-                            itemBuilder: (context, _) {
-                              return const Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              );
-                            },
-                            onRatingUpdate: (rating) {},
-                          ),
+                          (rate != '')
+                              ? RatingBar.builder(
+                                  itemSize: 8,
+                                  initialRating: double.parse(rate) / 2,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  unratedColor: Colors.grey,
+                                  itemCount: 5,
+                                  itemPadding:
+                                      const EdgeInsets.symmetric(horizontal: 2),
+                                  itemBuilder: (context, _) {
+                                    return const Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                    );
+                                  },
+                                  onRatingUpdate: (rating) {},
+                                )
+                              : Padding(padding: EdgeInsets.only(right: 0)),
                           Padding(padding: EdgeInsets.only(right: 10)),
                           Text(
-                            rate.toString(),
+                            (rate == '')
+                                ? rate
+                                : double.parse(rate).toStringAsFixed(1),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
