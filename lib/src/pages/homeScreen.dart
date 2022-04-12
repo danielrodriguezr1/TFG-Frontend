@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _paginaActual = 1;
+  int _paginaActual = 2;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             leading: Icon(Icons.menu, color: Colors.white70),
             title: Center(
-                child: Text("TÍTULO APP          ".toUpperCase(),
+                child: Text("NOMBRE APP          ".toUpperCase(),
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: Colors.white70,
                         fontSize: 20,
@@ -64,19 +64,50 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     PageRouteBuilder(
                         pageBuilder: (_, __, ___) => SearchScreen()));
-              } else if (_paginaActual == 1) {}
+              } else if (_paginaActual == 2) {
+              } else {}
             });
           },
           backgroundColor: Color(0xFF151C26),
           selectedItemColor: Color(0xFFF4C10F),
           unselectedItemColor: Color(0xFF5A606B),
           currentIndex: _paginaActual,
+          //showSelectedLabels: true,
+          //showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.search_rounded), label: "Buscar"),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: "Watchlist"),
+                icon: Icon(
+                  Icons.search_rounded,
+                  size: 20,
+                ),
+                label: "Buscar"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.recommend,
+                  size: 20,
+                ),
+                label: "Recomendado"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  size: 20,
+                ),
+                label: "Inicio"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.list,
+                  size: 20,
+                ),
+                label: "Watchlist"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.account_circle_rounded,
+                  size: 20,
+                ),
+                label: "Perfil"),
           ],
+          selectedLabelStyle: TextStyle(fontSize: 12),
         ),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,

@@ -158,7 +158,9 @@ class _SearchResultsState extends State<SearchResults> {
                               (movie) => HorizontalMovieCard(
                                 backdrop: movie.backdropPath,
                                 color: Colors.white,
-                                date: movie.releaseDate,
+                                date: (movie.releaseDate != '')
+                                    ? movie.releaseDate.substring(0, 4)
+                                    : movie.releaseDate,
                                 isMovie: false,
                                 id: movie.id.toString(),
                                 name: movie.name,
@@ -322,7 +324,7 @@ class _SearchResultsState extends State<SearchResults> {
                                 onTap: () => Navigator.of(context).pop(),
                               ),
                               Text(
-                                'Results for "${widget.query}"',
+                                'Resultados para "${widget.query}"',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
