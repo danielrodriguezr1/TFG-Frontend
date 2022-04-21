@@ -11,6 +11,7 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    voteIMDB(movie.id.toString());
     cast(movie.id.toString());
     platformBuyFilm(movie.id.toString());
     //Future<String> runtime = runtimeById(movie.id.toString());
@@ -99,20 +100,135 @@ class DetailsScreen extends StatelessWidget {
                                     child: Image.asset('assets/icons/imdb.jpg',
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
-                                RichText(
-                                    text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
-                                  children: [
-                                    TextSpan(
-                                        text: "${movie.voteAverage}/",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600)),
-                                    TextSpan(text: "10\n"),
-                                  ],
-                                ))
+                                FutureBuilder(
+                                    future: voteIMDB(movie.id.toString()),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return RichText(
+                                            text: TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          children: [
+                                            TextSpan(
+                                                text: "${snapshot.data}/",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: "10\n"),
+                                          ],
+                                        ));
+                                      }
+                                      return Container();
+                                    }),
                               ],
                             ),
+
+                            //METACRITIC
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: 10),
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.asset(
+                                        'assets/icons/metacritic.png',
+                                        width: 50,
+                                        height: 50)),
+                                SizedBox(height: 5),
+                                FutureBuilder(
+                                    future: voteMetacritic(movie.id.toString()),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return RichText(
+                                            text: TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          children: [
+                                            TextSpan(
+                                                text: "${snapshot.data}/",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: "100\n"),
+                                          ],
+                                        ));
+                                      }
+                                      return Container();
+                                    }),
+                              ],
+                            ),
+
+                            //FILMAFFINITY
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: 10),
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.asset(
+                                        'assets/icons/filmaffinity.jpg',
+                                        width: 50,
+                                        height: 50)),
+                                SizedBox(height: 5),
+                                FutureBuilder(
+                                    future:
+                                        voteFilmAffinity(movie.id.toString()),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return RichText(
+                                            text: TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          children: [
+                                            TextSpan(
+                                                text: "${snapshot.data}/",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: "10\n"),
+                                          ],
+                                        ));
+                                      }
+                                      return Container();
+                                    }),
+                              ],
+                            ),
+
+                            //ROTTEN TOMATOES
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: 10),
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.asset(
+                                        'assets/icons/rottentomatoes.jpg',
+                                        width: 50,
+                                        height: 50)),
+                                SizedBox(height: 5),
+                                FutureBuilder(
+                                    future:
+                                        voteRottenTomatoes(movie.id.toString()),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return RichText(
+                                            text: TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          children: [
+                                            TextSpan(
+                                                text: "${snapshot.data}/",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            TextSpan(text: "100\n"),
+                                          ],
+                                        ));
+                                      }
+                                      return Container();
+                                    }),
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -324,7 +440,7 @@ class DetailsScreen extends StatelessWidget {
                     Text(
                       "Suscripción",
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.white,
                         fontSize: 16,
                       ),
                     ),
@@ -334,7 +450,7 @@ class DetailsScreen extends StatelessWidget {
                       child: FutureBuilder(
                           future: platformFlatrateFilm(movie.id.toString()),
                           builder: (context, snapshot) {
-                            if (snapshot.hasData) {
+                            if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
                               return ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -347,11 +463,11 @@ class DetailsScreen extends StatelessWidget {
                             return Container();
                           }),
                     ),
-                    //SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Text(
-                      "Comprar",
+                      "Comprar o alquilar",
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: Colors.white,
                         fontSize: 16,
                       ),
                     ),
@@ -361,7 +477,7 @@ class DetailsScreen extends StatelessWidget {
                       child: FutureBuilder(
                           future: platformBuyFilm(movie.id.toString()),
                           builder: (context, snapshot) {
-                            if (snapshot.hasData) {
+                            if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
                               return ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -416,6 +532,29 @@ class DetailsScreen extends StatelessWidget {
     List<dynamic> platforms =
         await TMDBApiService().platformFlatrateFilm(movie.id.toString());
     return platforms;
+  }
+
+  Future<String> voteIMDB(String idMovie) async {
+    String voteIMDB = await TMDBApiService().voteIMDB(movie.id.toString());
+    return voteIMDB;
+  }
+
+  Future<String> voteMetacritic(String idMovie) async {
+    String voteMetacritic =
+        await TMDBApiService().voteMetacritic(movie.id.toString());
+    return voteMetacritic;
+  }
+
+  Future<String> voteFilmAffinity(String idMovie) async {
+    String voteFilmAffinity =
+        await TMDBApiService().voteFilmAffinity(movie.id.toString());
+    return voteFilmAffinity;
+  }
+
+  Future<String> voteRottenTomatoes(String idMovie) async {
+    String voteRottenTomatoes =
+        await TMDBApiService().voteRottenTomatoes(movie.id.toString());
+    return voteRottenTomatoes;
   }
 }
 
@@ -626,7 +765,7 @@ class FlatratePlatform extends StatelessWidget {
           ],
         ),
       );
-    }
-    return Container();
+    } else
+      return Container();
   }
 }

@@ -12,6 +12,7 @@ class Movie {
   final String voteAverage;
   final int runtime;
   //final List genres;
+  final String imdb_id;
   final String poster;
 
   String error;
@@ -30,6 +31,7 @@ class Movie {
       this.voteAverage,
       this.runtime,
       //this.genres,
+      this.imdb_id,
       this.poster});
 
   factory Movie.fromJson(dynamic json) {
@@ -51,6 +53,7 @@ class Movie {
         voteAverage: json['vote_average'].toString(),
         runtime: json['runtime'],
         //genres: (json['genres'] as List).map((laung) => laung['name']).toList(),
+        imdb_id: json['imdb_id'],
         poster: json['poster_path'] != null
             ? "https://image.tmdb.org/t/p/w500" + json['poster_path']
             : "https://images.pexels.com/photos/11760757/pexels-photo-11760757.png?auto=compress&cs=tinysrgb&h=750&w=1260");

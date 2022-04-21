@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:tfgapp/src/models/movie.dart';
 import 'package:tfgapp/src/models/tv.dart';
 
+import 'IMDB-Api-service.dart';
+
 class TMDBApiService {
   final Dio _dio = Dio();
   final String baseUrl = "https://api.themoviedb.org/3";
@@ -144,22 +146,10 @@ class TMDBApiService {
       final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
       print('Api Call: $url');
       final response = await _dio.get(url);
-      List<dynamic> platforms = response.data['results']['ES']['buy'].toList();
-      print('ES ESTO $platforms.length');
-      return platforms;
-    } catch (error, stacktrace) {
-      print(error);
-      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
-    }
-  }
-
-  Future<List<dynamic>> platformRentFilm(String id) async {
-    try {
-      final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
-      print('Api Call: $url');
-      final response = await _dio.get(url);
-      List<dynamic> platforms = response.data['results']['ES']['rent'].toList();
-      print('ES ESTO $platforms.length');
+      List<dynamic> platforms;
+      if (response.data['results']['ES']['buy'] != null)
+        platforms = response.data['results']['ES']['buy'].toList();
+      //print('ES ESTO $platforms.length');
       return platforms;
     } catch (error, stacktrace) {
       print(error);
@@ -172,10 +162,75 @@ class TMDBApiService {
       final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
       print('Api Call: $url');
       final response = await _dio.get(url);
-      List<dynamic> platforms =
-          response.data['results']['ES']['flatrate'].toList();
-      print('ES ESTO $platforms.length');
+      List<dynamic> platforms;
+      if (response.data['results']['ES']['flatrate'] != null)
+        platforms = response.data['results']['ES']['flatrate'].toList();
+      //print('ES ESTO $platforms.length');
       return platforms;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteIMDB(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteIMDB(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteFilmAffinity(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteFilmAffinity(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteMetacritic(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteMetacritic(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteRottenTomatoes(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteRottenTomatoes(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
     } catch (error, stacktrace) {
       print(error);
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
