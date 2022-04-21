@@ -12,11 +12,6 @@ Future<void> main() async {
   await SecureStorage.readSecureStorage('App_Token').then(
       (value) => {if (value != null) loggedIn = true else loggedIn = false});
 
-  if (loggedIn)
-    print('Ya logueado');
-  else
-    print('No logueado aun');
-
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -27,7 +22,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (loggedIn) return MaterialApp(title: 'TFG APP', home: HomeScreen());
-    //return MaterialApp(title: 'TFG APP', home: LoginPage());
     return MaterialApp(title: 'TFG APP', home: LoginPage());
   }
 }

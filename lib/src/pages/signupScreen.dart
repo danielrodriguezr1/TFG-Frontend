@@ -381,15 +381,9 @@ class _SignupPageState extends State<SignupPage> {
       'password': pwd,
     }).then((res) {
       if (res.statusCode == 201) {
-        print(email);
-        print('creado');
-
         Map<String, dynamic> body = jsonDecode(res.body);
-        print(body["token"]);
-        print(body["userId"]);
         SecureStorage.writeSecureStorage('App_Token', body["token"]);
         SecureStorage.writeSecureStorage('App_UserId', body["userId"]);
-        print("escrito");
 
         Fluttertoast.showToast(
           msg: 'Usuario creado correctamente',

@@ -10,6 +10,8 @@ class Movie {
   final bool video;
   final int voteCount;
   final String voteAverage;
+  final int runtime;
+  //final List genres;
   final String poster;
 
   String error;
@@ -26,6 +28,8 @@ class Movie {
       this.video,
       this.voteCount,
       this.voteAverage,
+      this.runtime,
+      //this.genres,
       this.poster});
 
   factory Movie.fromJson(dynamic json) {
@@ -45,8 +49,47 @@ class Movie {
         video: json['video'],
         voteCount: json['vote_count'],
         voteAverage: json['vote_average'].toString(),
+        runtime: json['runtime'],
+        //genres: (json['genres'] as List).map((laung) => laung['name']).toList(),
         poster: json['poster_path'] != null
             ? "https://image.tmdb.org/t/p/w500" + json['poster_path']
             : "https://images.pexels.com/photos/11760757/pexels-photo-11760757.png?auto=compress&cs=tinysrgb&h=750&w=1260");
+  }
+}
+
+class CastInfo {
+  final String name;
+  final String character;
+  final String image;
+  final String id;
+  CastInfo({
+    this.name,
+    this.character,
+    this.image,
+    this.id,
+  });
+  factory CastInfo.fromJson(json) {
+    return CastInfo(
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
+      character: json['character'] ?? '',
+      image: json['profile_path'] != null
+          ? "https://image.tmdb.org/t/p/w500" + json['profile_path']
+          : "",
+    );
+  }
+}
+
+class CastInfoList {
+  final List<CastInfo> castList;
+  CastInfoList({
+    this.castList,
+  });
+  factory CastInfoList.fromJson(json) {
+    return CastInfoList(
+      castList: ((json['cast'] ?? []) as List)
+          .map((cast) => CastInfo.fromJson(cast))
+          .toList(),
+    );
   }
 }

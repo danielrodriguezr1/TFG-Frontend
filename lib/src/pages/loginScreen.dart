@@ -278,16 +278,10 @@ class _LoginPageState extends State<LoginPage> {
       'password': pwd,
     }).then((res) {
       if (res.statusCode == 200) {
-        print(email);
-        print('logueado');
-
         Map<String, dynamic> body = jsonDecode(res.body);
-        print(body["token"]);
-        print(body["userId"]);
+
         SecureStorage.writeSecureStorage('App_Token', body["token"]);
         SecureStorage.writeSecureStorage('App_UserID', body["userId"]);
-
-        print("escrito");
 
         Fluttertoast.showToast(
           msg: 'Logueado correctamente',

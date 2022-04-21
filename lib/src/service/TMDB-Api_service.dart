@@ -80,4 +80,105 @@ class TMDBApiService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<String> runtimeFilmById(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String movieRuntime = response.data['runtime'].toString();
+      //print(movieRuntime);
+      return movieRuntime;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> genresFilmById(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> genres = (response.data['genres'] as List)
+          .map((laung) => laung['name'])
+          .toList();
+      //print(movieRuntime);
+      return genres;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> cast(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id/credits?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> cast = response.data['cast'].toList();
+      //print(movieRuntime);
+      return cast;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> crew(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id/credits?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> crew = response.data['crew'].toList();
+      //print(movieRuntime);
+      return crew;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> platformBuyFilm(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> platforms = response.data['results']['ES']['buy'].toList();
+      print('ES ESTO $platforms.length');
+      return platforms;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> platformRentFilm(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> platforms = response.data['results']['ES']['rent'].toList();
+      print('ES ESTO $platforms.length');
+      return platforms;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> platformFlatrateFilm(String id) async {
+    try {
+      final url = '$baseUrl/movie/$id/watch/providers?$apiKey';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> platforms =
+          response.data['results']['ES']['flatrate'].toList();
+      print('ES ESTO $platforms.length');
+      return platforms;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }

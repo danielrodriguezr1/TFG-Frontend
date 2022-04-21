@@ -16,6 +16,7 @@ import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_state.dart';
 import 'package:tfgapp/src/models/movie.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/tv.dart';
+import 'package:tfgapp/src/pages/detailsScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -216,46 +217,56 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: movies.length,
                           itemBuilder: (BuildContext context, int index) {
                             Movie movie = movies[index];
-                            return Stack(
-                              alignment: Alignment.bottomLeft,
-                              children: <Widget>[
-                                ClipRRect(
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/original/${movie.poster}',
-                                    height:
-                                        MediaQuery.of(context).size.height / 3,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        Platform.isAndroid
-                                            ? CircularProgressIndicator()
-                                            : CupertinoActivityIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/img_not_found.jpg'),
-                                    ))),
+                            return InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailsScreen(
+                                      movie: movie,
+                                    ),
+                                  )),
+                              child: Stack(
+                                alignment: Alignment.bottomLeft,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://image.tmdb.org/t/p/original/${movie.poster}',
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              3,
+                                      width: MediaQuery.of(context).size.width,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Platform.isAndroid
+                                              ? CircularProgressIndicator()
+                                              : CupertinoActivityIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/img_not_found.jpg'),
+                                      ))),
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                Padding(
-                                    padding:
-                                        EdgeInsets.only(bottom: 15, left: 15),
-                                    child: Text(
-                                      movie.title.toUpperCase(),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ))
-                              ],
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.only(bottom: 15, left: 15),
+                                      child: Text(
+                                        movie.title.toUpperCase(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ))
+                                ],
+                              ),
                             );
                           },
                           options: CarouselOptions(
@@ -309,96 +320,105 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: movieList.length,
                         itemBuilder: (context, index) {
                           Movie movie = movieList[index];
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
-                                  imageBuilder: (context, imageProvider) {
-                                    return Container(
+                          return InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                    movie: movie,
+                                  ),
+                                )),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                ClipRRect(
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        width: 190,
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    placeholder: (context, url) => Container(
+                                      width: 190,
+                                      height: 250,
+                                      child: Center(
+                                        child: Platform.isAndroid
+                                            ? CircularProgressIndicator()
+                                            : CupertinoActivityIndicator(),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       width: 190,
                                       height: 250,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(12),
-                                        ),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
+                                          image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/img_not_found.jpg'),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 180,
+                                  child: Text(
+                                    movie.title.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      RatingBar.builder(
+                                        itemSize: 8,
+                                        initialRating:
+                                            double.parse(movie.voteAverage) / 2,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        itemBuilder: (context, _) {
+                                          return const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                          );
+                                        },
+                                        onRatingUpdate: (rating) {},
                                       ),
-                                    );
-                                  },
-                                  placeholder: (context, url) => Container(
-                                    width: 190,
-                                    height: 250,
-                                    child: Center(
-                                      child: Platform.isAndroid
-                                          ? CircularProgressIndicator()
-                                          : CupertinoActivityIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 190,
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/img_not_found.jpg'),
-                                    )),
+                                      Text(
+                                        movie.voteAverage,
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: 180,
-                                child: Text(
-                                  movie.title.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      itemSize: 8,
-                                      initialRating:
-                                          double.parse(movie.voteAverage) / 2,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      itemBuilder: (context, _) {
-                                        return const Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        );
-                                      },
-                                      onRatingUpdate: (rating) {},
-                                    ),
-                                    Text(
-                                      movie.voteAverage,
-                                      style: TextStyle(color: Colors.white70),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -439,96 +459,99 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: tvList.length,
                         itemBuilder: (context, index) {
                           TV tv = tvList[index];
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://image.tmdb.org/t/p/original/${tv.backdropPath}',
-                                  imageBuilder: (context, imageProvider) {
-                                    return Container(
+                          return InkWell(
+                            //onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: tv,),)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                ClipRRect(
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/original/${tv.backdropPath}',
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        width: 190,
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    placeholder: (context, url) => Container(
+                                      width: 190,
+                                      height: 250,
+                                      child: Center(
+                                        child: Platform.isAndroid
+                                            ? CircularProgressIndicator()
+                                            : CupertinoActivityIndicator(),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       width: 190,
                                       height: 250,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(12),
-                                        ),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
+                                          image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/img_not_found.jpg'),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 180,
+                                  child: Text(
+                                    tv.name.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      RatingBar.builder(
+                                        itemSize: 8,
+                                        initialRating:
+                                            double.parse(tv.voteAverage) / 2,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        itemBuilder: (context, _) {
+                                          return const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                          );
+                                        },
+                                        onRatingUpdate: (rating) {},
                                       ),
-                                    );
-                                  },
-                                  placeholder: (context, url) => Container(
-                                    width: 190,
-                                    height: 250,
-                                    child: Center(
-                                      child: Platform.isAndroid
-                                          ? CircularProgressIndicator()
-                                          : CupertinoActivityIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 190,
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/img_not_found.jpg'),
-                                    )),
+                                      Text(
+                                        tv.voteAverage,
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: 180,
-                                child: Text(
-                                  tv.name.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      itemSize: 8,
-                                      initialRating:
-                                          double.parse(tv.voteAverage) / 2,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      itemBuilder: (context, _) {
-                                        return const Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        );
-                                      },
-                                      onRatingUpdate: (rating) {},
-                                    ),
-                                    Text(
-                                      tv.voteAverage,
-                                      style: TextStyle(color: Colors.white70),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -569,96 +592,105 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: movieList.length,
                         itemBuilder: (context, index) {
                           Movie movie = movieList[index];
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
-                                  imageBuilder: (context, imageProvider) {
-                                    return Container(
+                          return InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                    movie: movie,
+                                  ),
+                                )),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                ClipRRect(
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        width: 190,
+                                        height: 250,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    placeholder: (context, url) => Container(
+                                      width: 190,
+                                      height: 250,
+                                      child: Center(
+                                        child: Platform.isAndroid
+                                            ? CircularProgressIndicator()
+                                            : CupertinoActivityIndicator(),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       width: 190,
                                       height: 250,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(12),
-                                        ),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
+                                          image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/img_not_found.jpg'),
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  width: 180,
+                                  child: Text(
+                                    movie.title.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      RatingBar.builder(
+                                        itemSize: 8,
+                                        initialRating:
+                                            double.parse(movie.voteAverage) / 2,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        itemBuilder: (context, _) {
+                                          return const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                          );
+                                        },
+                                        onRatingUpdate: (rating) {},
                                       ),
-                                    );
-                                  },
-                                  placeholder: (context, url) => Container(
-                                    width: 190,
-                                    height: 250,
-                                    child: Center(
-                                      child: Platform.isAndroid
-                                          ? CircularProgressIndicator()
-                                          : CupertinoActivityIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 190,
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/img_not_found.jpg'),
-                                    )),
+                                      Text(
+                                        movie.voteAverage,
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: 180,
-                                child: Text(
-                                  movie.title.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    RatingBar.builder(
-                                      itemSize: 8,
-                                      initialRating:
-                                          double.parse(movie.voteAverage) / 2,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      itemBuilder: (context, _) {
-                                        return const Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        );
-                                      },
-                                      onRatingUpdate: (rating) {},
-                                    ),
-                                    Text(
-                                      movie.voteAverage,
-                                      style: TextStyle(color: Colors.white70),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         },
                       ),
