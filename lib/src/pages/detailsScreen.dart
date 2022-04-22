@@ -11,7 +11,7 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    voteIMDB(movie.id.toString());
+    //voteIMDB(movie.id.toString());
     cast(movie.id.toString());
     platformBuyFilm(movie.id.toString());
     //Future<String> runtime = runtimeById(movie.id.toString());
@@ -100,7 +100,7 @@ class DetailsScreen extends StatelessWidget {
                                     child: Image.asset('assets/icons/imdb.jpg',
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteIMDB(movie.id.toString()),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -119,7 +119,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -135,7 +135,7 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteMetacritic(movie.id.toString()),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -154,7 +154,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -170,7 +170,7 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future:
                                         voteFilmAffinity(movie.id.toString()),
                                     builder: (context, snapshot) {
@@ -190,7 +190,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -206,7 +206,7 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /* FutureBuilder(
                                     future:
                                         voteRottenTomatoes(movie.id.toString()),
                                     builder: (context, snapshot) {
@@ -226,7 +226,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             )
                           ],
@@ -356,7 +356,7 @@ class DetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Equipo técnico",
+                      "Equipo",
                       style: TextStyle(
                         color: Color(0xEAFFFFFF),
                         fontSize: 24,
@@ -460,7 +460,20 @@ class DetailsScreen extends StatelessWidget {
                                         platforms: platforms[index]),
                               );
                             }
-                            return Container();
+                            return Container(
+                              height: 200,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
+                              child: Column(children: [
+                                Text(
+                                  "Actualmente esta película no se encuentra disponible en ninguna plataforma por suscripción.",
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                )
+                              ]),
+                            );
                           }),
                     ),
                     SizedBox(height: 10),
@@ -486,7 +499,20 @@ class DetailsScreen extends StatelessWidget {
                                     BuyPlatform(platforms: platforms[index]),
                               );
                             }
-                            return Container();
+                            return Container(
+                              height: 200,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
+                              child: Column(children: [
+                                Text(
+                                  "Actualmente esta película no se encuentra disponible en ninguna plataforma para comprar o alquilar.",
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                )
+                              ]),
+                            );
                           }),
                     )
                   ],
@@ -519,6 +545,8 @@ class DetailsScreen extends StatelessWidget {
 
   Future<List<dynamic>> crew(String idMovie) async {
     List<dynamic> cast = await TMDBApiService().crew(movie.id.toString());
+    cast.sort((a, b) => a["job"].compareTo(b["job"]));
+
     return cast;
   }
 
@@ -617,48 +645,8 @@ class CrewCardDirector extends StatelessWidget {
   const CrewCardDirector({Key key, this.crew}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (crew['job'] == 'Director') {
-      return Container(
-        margin: EdgeInsets.only(right: 20),
-        width: 80,
-        child: Column(
-          children: <Widget>[
-            CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(
-                  crew['profile_path'] != null
-                      ? "https://image.tmdb.org/t/p/w500" + crew['profile_path']
-                      : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            Text(crew['name'],
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: TextStyle(color: Colors.white70)),
-            SizedBox(height: 10),
-            Text(
-              crew['job'] != null ? crew['job'] : '',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF9A9BB2)),
-            )
-          ],
-        ),
-      );
-    }
-    return Container();
-  }
-}
-
-class CrewCardOthers extends StatelessWidget {
-  final Map crew;
-  const CrewCardOthers({Key key, this.crew}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    if (crew['job'] == 'Screenplay' ||
+    if (crew['job'] == 'Director' ||
+        crew['job'] == 'Screenplay' ||
         crew['job'] == 'Director of Photography' ||
         crew['job'] == 'Original Music Composer' ||
         crew['job'] == 'Novel' ||
@@ -685,7 +673,13 @@ class CrewCardOthers extends StatelessWidget {
                 style: TextStyle(color: Colors.white70)),
             SizedBox(height: 10),
             Text(
-              crew['job'] != null ? crew['job'] : '',
+              (crew['job'] == "Director of Photography")
+                  ? "Director de fotografía"
+                  : (crew['job'] == "Novel")
+                      ? "Novela"
+                      : (crew['job'] == "Original Music Composer")
+                          ? "Música"
+                          : "Guion",
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(color: Color(0xFF9A9BB2)),

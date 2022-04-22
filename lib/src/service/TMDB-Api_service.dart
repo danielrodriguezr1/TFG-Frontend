@@ -147,8 +147,10 @@ class TMDBApiService {
       print('Api Call: $url');
       final response = await _dio.get(url);
       List<dynamic> platforms;
-      if (response.data['results']['ES']['buy'] != null)
-        platforms = response.data['results']['ES']['buy'].toList();
+      if (response.data['results']['ES'] != null) {
+        if (response.data['results']['ES']['buy'] != null)
+          platforms = response.data['results']['ES']['buy'].toList();
+      }
       //print('ES ESTO $platforms.length');
       return platforms;
     } catch (error, stacktrace) {
@@ -163,8 +165,10 @@ class TMDBApiService {
       print('Api Call: $url');
       final response = await _dio.get(url);
       List<dynamic> platforms;
-      if (response.data['results']['ES']['flatrate'] != null)
-        platforms = response.data['results']['ES']['flatrate'].toList();
+      if (response.data['results']['ES'] != null) {
+        if (response.data['results']['ES']['flatrate'] != null)
+          platforms = response.data['results']['ES']['flatrate'].toList();
+      }
       //print('ES ESTO $platforms.length');
       return platforms;
     } catch (error, stacktrace) {

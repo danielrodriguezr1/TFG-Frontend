@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:tfgapp/src/models/movie.dart';
+import 'package:tfgapp/src/pages/detailsScreen.dart';
 //import '../animation.dart';
 //import '../constants.dart';
 //import '../screens/movie_info_screen/movie_Info_screen.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 //import 'star_icon_display.dart';
 
 class MovieCard extends StatelessWidget {
+  final Movie movie;
   final String poster;
   final String name;
   final String backdrop;
@@ -18,6 +21,7 @@ class MovieCard extends StatelessWidget {
   final bool isMovie;
   const MovieCard({
     Key key,
+    this.movie,
     this.poster,
     this.name,
     this.backdrop,
@@ -95,6 +99,7 @@ class MovieCard extends StatelessWidget {
 }
 
 class HorizontalMovieCard extends StatelessWidget {
+  final Movie movie;
   final String poster;
   final String name;
   final String backdrop;
@@ -105,6 +110,7 @@ class HorizontalMovieCard extends StatelessWidget {
   final bool isMovie;
   const HorizontalMovieCard({
     Key key,
+    this.movie,
     this.poster,
     this.name,
     this.backdrop,
@@ -122,25 +128,25 @@ class HorizontalMovieCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: InkWell(
-        /*onTap: () {
+        onTap: () {
           if (isMovie) {
-            pushNewScreen(
-              context,
-              MovieDetailsScreen(
-                id: id,
-                backdrop: backdrop,
-              ),
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsScreen(
+                    movie: movie,
+                  ),
+                ));
           } else {
-            pushNewScreen(
-              context,
-              TvShowDetailScreen(
-                backdrop: backdrop,
-                id: id,
-              ),
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsScreen(
+                    movie: movie,
+                  ),
+                ));
           }
-        },*/
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -107,6 +107,7 @@ class _SearchResultsState extends State<SearchResults> {
                             if (state.movies.isEmpty) const NoResultsFound(),
                             ...state.movies.map(
                               (movie) => HorizontalMovieCard(
+                                movie: movie,
                                 backdrop: movie.backdropPath,
                                 color: Colors.white,
                                 date: (movie.releaseDate != '')
