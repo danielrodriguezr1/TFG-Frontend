@@ -16,7 +16,8 @@ import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_state.dart';
 import 'package:tfgapp/src/models/movie.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/tv.dart';
-import 'package:tfgapp/src/pages/detailsScreen.dart';
+import 'package:tfgapp/src/pages/detailsMovieScreen.dart';
+import 'package:tfgapp/src/pages/detailsTVScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -221,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => DetailsScreen(
+                                    builder: (context) => DetailsMovieScreen(
                                       movie: movie,
                                     ),
                                   )),
@@ -324,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetailsScreen(
+                                  builder: (context) => DetailsMovieScreen(
                                     movie: movie,
                                   ),
                                 )),
@@ -460,7 +461,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           TV tv = tvList[index];
                           return InkWell(
-                            //onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: tv,),)),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsTVScreen(
+                                    tvid: tv.id.toString(),
+                                    name: tv.name,
+                                    year: tv.releaseDate,
+                                    backdropPath: tv.backdropPath,
+                                    voteAverage: tv.voteAverage,
+                                    //overview: tv.overview,
+                                  ),
+                                )),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -596,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetailsScreen(
+                                  builder: (context) => DetailsMovieScreen(
                                     movie: movie,
                                   ),
                                 )),

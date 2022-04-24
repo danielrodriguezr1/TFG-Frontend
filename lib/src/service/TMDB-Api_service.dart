@@ -68,6 +68,21 @@ class TMDBApiService {
     }
   }
 
+  Future<TV> getTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      var tv = response.data['results'];
+      TV tv1 = tv.map((m) => TV.fromJson(m));
+      print(tv1.id);
+      return tv1;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
   Future<List<Movie>> findByTitle(String title) async {
     try {
       final url =
@@ -77,6 +92,20 @@ class TMDBApiService {
       var movie = response.data['results'] as List;
       List<Movie> movieList = movie.map((m) => Movie.fromJson(m)).toList();
       return movieList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> overvieyTVById(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String overview = response.data['overview'];
+      //print(movieRuntime);
+      return overview;
     } catch (error, stacktrace) {
       print(error);
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
@@ -97,9 +126,81 @@ class TMDBApiService {
     }
   }
 
+  Future<String> episodeRuntime(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String episodeRuntime = response.data['episode_run_time'][0].toString();
+      //print(movieRuntime);
+      return episodeRuntime;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> numberOfSeasons(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String numSeasons = response.data['number_of_seasons'].toString();
+      //print(movieRuntime);
+      return numSeasons;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> numberOfEpisodes(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String numEpisodes = response.data['number_of_episodes'].toString();
+      //print(movieRuntime);
+      return numEpisodes;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> statusTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String status = response.data['status'].toString();
+      //print(movieRuntime);
+      return status;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
   Future<List<dynamic>> genresFilmById(String id) async {
     try {
       final url = '$baseUrl/movie/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> genres = (response.data['genres'] as List)
+          .map((laung) => laung['name'])
+          .toList();
+      //print(movieRuntime);
+      return genres;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> genresTVById(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
       print('Api Call: $url');
       final response = await _dio.get(url);
       List<dynamic> genres = (response.data['genres'] as List)
@@ -127,6 +228,20 @@ class TMDBApiService {
     }
   }
 
+  Future<List<dynamic>> castTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/credits?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> cast = response.data['cast'].toList();
+      //print(movieRuntime);
+      return cast;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
   Future<List<dynamic>> crew(String id) async {
     try {
       final url = '$baseUrl/movie/$id/credits?$apiKey&language=es-ES';
@@ -135,6 +250,55 @@ class TMDBApiService {
       List<dynamic> crew = response.data['crew'].toList();
       //print(movieRuntime);
       return crew;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> crewTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> crew = response.data['created_by'].toList();
+      return crew;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> platformBuyTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/watch/providers?$apiKey';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> platforms;
+      if (response.data['results']['ES'] != null) {
+        if (response.data['results']['ES']['buy'] != null)
+          platforms = response.data['results']['ES']['buy'].toList();
+      }
+      //print('ES ESTO $platforms.length');
+      return platforms;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> platformFlatrateTV(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/watch/providers?$apiKey';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      List<dynamic> platforms;
+      if (response.data['results']['ES'] != null) {
+        if (response.data['results']['ES']['flatrate'] != null)
+          platforms = response.data['results']['ES']['flatrate'].toList();
+      }
+      //print('ES ESTO $platforms.length');
+      return platforms;
     } catch (error, stacktrace) {
       print(error);
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
@@ -233,6 +397,70 @@ class TMDBApiService {
       String imdbid = response.data['imdb_id'].toString();
 
       final String vote = await IMDBApiService().voteRottenTomatoes(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteTVIMDB(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/external_ids?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteTVIMDB(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteTVFilmAffinity(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/external_ids?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteTVFilmAffinity(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteTVMetacritic(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/external_ids?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteTVMetacritic(imdbid);
+      print('ES ESTOOOO $vote');
+      return vote;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> voteTVRottenTomatoes(String id) async {
+    try {
+      final url = '$baseUrl/tv/$id/external_ids?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String imdbid = response.data['imdb_id'].toString();
+
+      final String vote = await IMDBApiService().voteTVRottenTomatoes(imdbid);
       print('ES ESTOOOO $vote');
       return vote;
     } catch (error, stacktrace) {

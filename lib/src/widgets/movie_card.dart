@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/movie.dart';
-import 'package:tfgapp/src/pages/detailsScreen.dart';
+import 'package:tfgapp/src/models/tv.dart';
+import 'package:tfgapp/src/pages/detailsMovieScreen.dart';
+import 'package:tfgapp/src/pages/detailsTVScreen.dart';
 //import '../animation.dart';
 //import '../constants.dart';
 //import '../screens/movie_info_screen/movie_Info_screen.dart';
@@ -11,6 +13,7 @@ import 'package:tfgapp/src/pages/detailsScreen.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
+  final TV tv;
   final String poster;
   final String name;
   final String backdrop;
@@ -22,6 +25,7 @@ class MovieCard extends StatelessWidget {
   const MovieCard({
     Key key,
     this.movie,
+    this.tv,
     this.poster,
     this.name,
     this.backdrop,
@@ -100,6 +104,7 @@ class MovieCard extends StatelessWidget {
 
 class HorizontalMovieCard extends StatelessWidget {
   final Movie movie;
+  final TV tv;
   final String poster;
   final String name;
   final String backdrop;
@@ -111,6 +116,7 @@ class HorizontalMovieCard extends StatelessWidget {
   const HorizontalMovieCard({
     Key key,
     this.movie,
+    this.tv,
     this.poster,
     this.name,
     this.backdrop,
@@ -133,16 +139,22 @@ class HorizontalMovieCard extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailsScreen(
+                  builder: (context) => DetailsMovieScreen(
                     movie: movie,
                   ),
                 ));
           } else {
+            print(id);
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailsScreen(
-                    movie: movie,
+                  builder: (context) => DetailsTVScreen(
+                    tvid: id,
+                    name: name,
+                    year: date,
+                    backdropPath: backdrop,
+                    voteAverage: rate,
+                    //overview: overview,
                   ),
                 ));
           }

@@ -2,19 +2,23 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tfgapp/src/models/movie.dart';
+import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/service/TMDB-Api_service.dart';
 
-class DetailsScreen extends StatelessWidget {
-  final Movie movie;
-  const DetailsScreen({Key key, this.movie}) : super(key: key);
+class DetailsTVScreen extends StatelessWidget {
+  final String tvid, name, year, backdropPath, voteAverage; /*, overview*/
+  const DetailsTVScreen({
+    Key key,
+    this.tvid,
+    this.name,
+    this.year,
+    this.backdropPath,
+    this.voteAverage,
+    //this.overview,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //voteIMDB(movie.id.toString());
-    cast(movie.id.toString());
-    platformBuyFilm(movie.id.toString());
-    //Future<String> runtime = runtimeById(movie.id.toString());
     return Scaffold(
         backgroundColor: Colors.black87,
         resizeToAvoidBottomInset: false,
@@ -30,7 +34,7 @@ class DetailsScreen extends StatelessWidget {
                     ClipRRect(
                       child: CachedNetworkImage(
                         imageUrl:
-                            'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                            'https://image.tmdb.org/t/p/original/$backdropPath',
                         height: MediaQuery.of(context).size.height * 0.4 - 50,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
@@ -80,7 +84,7 @@ class DetailsScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.black),
                                   children: [
                                     TextSpan(
-                                        text: "${movie.voteAverage}/",
+                                        text: "$voteAverage/",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600)),
@@ -100,8 +104,8 @@ class DetailsScreen extends StatelessWidget {
                                     child: Image.asset('assets/icons/imdb.jpg',
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
-                                    future: voteIMDB(movie.id.toString()),
+                                FutureBuilder(
+                                    future: voteTVIMDB(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -119,7 +123,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -135,8 +139,8 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
-                                    future: voteMetacritic(movie.id.toString()),
+                                FutureBuilder(
+                                    future: voteTVMetacritic(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -154,7 +158,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -170,9 +174,8 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
-                                    future:
-                                        voteFilmAffinity(movie.id.toString()),
+                                FutureBuilder(
+                                    future: voteTVFilmAffinity(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -190,7 +193,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -206,9 +209,8 @@ class DetailsScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /* FutureBuilder(
-                                    future:
-                                        voteRottenTomatoes(movie.id.toString()),
+                                FutureBuilder(
+                                    future: voteTVRottenTomatoes(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -226,7 +228,7 @@ class DetailsScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             )
                           ],
@@ -248,7 +250,7 @@ class DetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(movie.title,
+                          Text(name,
                               style: TextStyle(
                                 color: Color(0xEAFFFFFF),
                                 fontSize: 24,
@@ -256,15 +258,15 @@ class DetailsScreen extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: <Widget>[
-                              (movie.releaseDate != '')
+                              (year != '')
                                   ? Text(
-                                      '${movie.releaseDate.substring(0, 4)}',
+                                      '${year.substring(0, 4)}',
                                       style: TextStyle(color: Colors.white54),
                                     )
                                   : Text(''),
                               SizedBox(width: 10),
                               FutureBuilder(
-                                  future: runtimeById(movie.id.toString()),
+                                  future: numberOfSeasons(tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -272,11 +274,44 @@ class DetailsScreen extends StatelessWidget {
                                               TextStyle(color: Colors.white54));
                                     }
                                     return Container();
-                                  })
-                              /*Text(
-                                '$runtime',
-                                style: TextStyle(color: Colors.white54),
-                              )*/
+                                  }),
+                              SizedBox(width: 10),
+                              FutureBuilder(
+                                  future: numberOfEpisodes(tvid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text("${snapshot.data}",
+                                          style:
+                                              TextStyle(color: Colors.white54));
+                                    }
+                                    return Container();
+                                  }),
+                              SizedBox(width: 10),
+                              FutureBuilder(
+                                  future: episodeRuntime(tvid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text("${snapshot.data}",
+                                          style:
+                                              TextStyle(color: Colors.white54));
+                                    }
+                                    return Container();
+                                  }),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: <Widget>[
+                              FutureBuilder(
+                                  future: statusTV(tvid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text("${snapshot.data}",
+                                          style:
+                                              TextStyle(color: Colors.white70));
+                                    }
+                                    return Container();
+                                  }),
                             ],
                           )
                         ],
@@ -304,7 +339,7 @@ class DetailsScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 36,
                   child: FutureBuilder(
-                      future: genresById(movie.id.toString()),
+                      future: genresById(tvid),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<dynamic> genres = snapshot.data;
@@ -343,11 +378,16 @@ class DetailsScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(movie.overview,
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      color: Colors.white70,
-                    )),
+                child: FutureBuilder(
+                    future: overviewByID(tvid),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text("${snapshot.data}",
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(color: Colors.white70));
+                      }
+                      return Container();
+                    }),
               ),
 
               Padding(
@@ -368,7 +408,7 @@ class DetailsScreen extends StatelessWidget {
                         Container(
                           height: 160,
                           child: FutureBuilder(
-                              future: crew(movie.id.toString()),
+                              future: crew(tvid),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<dynamic> crew = snapshot.data;
@@ -405,7 +445,7 @@ class DetailsScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: cast(movie.id.toString()),
+                          future: cast(tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<dynamic> cast = snapshot.data;
@@ -448,7 +488,7 @@ class DetailsScreen extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       child: FutureBuilder(
-                          future: platformFlatrateFilm(movie.id.toString()),
+                          future: platformFlatrateTV(tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -488,7 +528,7 @@ class DetailsScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: platformBuyFilm(movie.id.toString()),
+                          future: platformBuyTV(tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -523,66 +563,95 @@ class DetailsScreen extends StatelessWidget {
         ));
   }
 
-  Future<String> runtimeById(String idMovie) async {
-    String runtime =
-        await TMDBApiService().runtimeFilmById(movie.id.toString());
-    final int hour = int.parse(runtime) ~/ 60;
-    final int minutes = int.parse(runtime) % 60;
-    return '${hour.toString()} h ${minutes.toString()} min';
-    //return runtime;
+  Future<TV> getTV(String idTV) async {
+    TV tv = await TMDBApiService().getTV(idTV.toString());
+    return tv;
   }
 
-  Future<List<dynamic>> genresById(String idMovie) async {
-    List<dynamic> genres =
-        await TMDBApiService().genresFilmById(movie.id.toString());
+  Future<List<dynamic>> genresById(String idTV) async {
+    List<dynamic> genres = await TMDBApiService().genresTVById(tvid);
     return genres;
   }
 
-  Future<List<dynamic>> cast(String idMovie) async {
-    List<dynamic> cast = await TMDBApiService().cast(movie.id.toString());
-    return cast;
-  }
-
-  Future<List<dynamic>> crew(String idMovie) async {
-    List<dynamic> cast = await TMDBApiService().crew(movie.id.toString());
-    cast.sort((a, b) => a["job"].compareTo(b["job"]));
+  Future<List<dynamic>> crew(String idTV) async {
+    List<dynamic> cast = await TMDBApiService().crewTV(tvid);
+    print(cast);
+    //cast.sort((a, b) => a["job"].compareTo(b["job"]));
 
     return cast;
   }
 
-  Future<List<dynamic>> platformBuyFilm(String idMovie) async {
+  Future<List<dynamic>> cast(String idTV) async {
+    List<dynamic> cast = await TMDBApiService().castTV(tvid);
+    return cast;
+  }
+
+  Future<List<dynamic>> platformBuyTV(String idTV) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformBuyFilm(movie.id.toString());
+        await TMDBApiService().platformBuyTV(tvid.toString());
     return platforms;
   }
 
-  Future<List<dynamic>> platformFlatrateFilm(String idMovie) async {
+  Future<List<dynamic>> platformFlatrateTV(String idTV) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformFlatrateFilm(movie.id.toString());
+        await TMDBApiService().platformFlatrateTV(tvid.toString());
     return platforms;
   }
 
-  Future<String> voteIMDB(String idMovie) async {
-    String voteIMDB = await TMDBApiService().voteIMDB(movie.id.toString());
-    return voteIMDB;
+  Future<String> overviewByID(String idTV) async {
+    String overview = await TMDBApiService().overvieyTVById(tvid);
+    return overview;
   }
 
-  Future<String> voteMetacritic(String idMovie) async {
-    String voteMetacritic =
-        await TMDBApiService().voteMetacritic(movie.id.toString());
-    return voteMetacritic;
+  Future<String> numberOfSeasons(String idTV) async {
+    String numberSeasons = await TMDBApiService().numberOfSeasons(tvid);
+    return ('$numberSeasons temporadas');
   }
 
-  Future<String> voteFilmAffinity(String idMovie) async {
-    String voteFilmAffinity =
-        await TMDBApiService().voteFilmAffinity(movie.id.toString());
-    return voteFilmAffinity;
+  Future<String> numberOfEpisodes(String idTV) async {
+    String numberOfEpisodes = await TMDBApiService().numberOfEpisodes(tvid);
+    return ('$numberOfEpisodes episodios');
   }
 
-  Future<String> voteRottenTomatoes(String idMovie) async {
-    String voteRottenTomatoes =
-        await TMDBApiService().voteRottenTomatoes(movie.id.toString());
-    return voteRottenTomatoes;
+  Future<String> episodeRuntime(String idTV) async {
+    String episodeRuntime = await TMDBApiService().episodeRuntime(tvid);
+    return ('$episodeRuntime min');
+  }
+
+  Future<String> statusTV(String idTV) async {
+    String status = await TMDBApiService().statusTV(tvid);
+    if (status == "Returning Series")
+      return ('La serie se encuentra en fase de retorno.');
+    else if (status == "In Production")
+      return ('La serie se encuentra en producción.');
+    else if (status == "Ended")
+      return ('La serie se encuentra finalizada.');
+    else if (status == "Canceled")
+      return ('La serie se encuentra cancelada.');
+    else
+      return ('La serie está en fase piloto.');
+  }
+
+  Future<String> voteTVIMDB(String idTV) async {
+    String voteTVIMDB = await TMDBApiService().voteTVIMDB(tvid.toString());
+    return voteTVIMDB;
+  }
+
+  Future<String> voteTVMetacritic(String idTV) async {
+    String voteTVMetacritic =
+        await TMDBApiService().voteTVMetacritic(tvid.toString());
+    return voteTVMetacritic;
+  }
+
+  Future<String> voteTVFilmAffinity(String idTV) async {
+    String voteTVFilmAffinity = await TMDBApiService().voteTVFilmAffinity(tvid);
+    return voteTVFilmAffinity;
+  }
+
+  Future<String> voteTVRottenTomatoes(String idTV) async {
+    String voteTVRottenTomatoes =
+        await TMDBApiService().voteTVRottenTomatoes(tvid);
+    return voteTVRottenTomatoes;
   }
 }
 
@@ -604,22 +673,6 @@ class CastCard extends StatelessWidget {
                     ? "https://image.tmdb.org/t/p/w500" + cast['profile_path']
                     : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
               )),
-          /*ClipRRect(
-            child: CachedNetworkImage(
-              imageUrl: cast['profile_path'] != null
-                  ? "https://image.tmdb.org/t/p/w500" + cast['profile_path']
-                  : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
-              height: 80,
-              //width: MediaQuery.of(context).size.width,
-              //fit: BoxFit.cover,
-              errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                image: AssetImage('assets/images/img_not_found.jpg'),
-              ))),
-            ),
-            borderRadius: BorderRadius.circular(75),
-          ),*/
           SizedBox(
             height: 10,
           ),
@@ -645,50 +698,36 @@ class CrewCardDirector extends StatelessWidget {
   const CrewCardDirector({Key key, this.crew}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (crew['job'] == 'Director' ||
-        crew['job'] == 'Screenplay' ||
-        crew['job'] == 'Director of Photography' ||
-        crew['job'] == 'Original Music Composer' ||
-        crew['job'] == 'Novel' ||
-        crew['job'] == 'Writer') {
-      return Container(
-        margin: EdgeInsets.only(right: 20),
-        width: 80,
-        child: Column(
-          children: <Widget>[
-            CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(
-                  crew['profile_path'] != null
-                      ? "https://image.tmdb.org/t/p/w500" + crew['profile_path']
-                      : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            Text(crew['name'],
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: TextStyle(color: Colors.white70)),
-            SizedBox(height: 10),
-            Text(
-              (crew['job'] == "Director of Photography")
-                  ? "Director de fotografía"
-                  : (crew['job'] == "Novel")
-                      ? "Novela"
-                      : (crew['job'] == "Original Music Composer")
-                          ? "Música"
-                          : "Guion",
-              maxLines: 2,
+    return Container(
+      margin: EdgeInsets.only(right: 20),
+      width: 80,
+      child: Column(
+        children: <Widget>[
+          CircleAvatar(
+              radius: 35,
+              backgroundColor: Colors.transparent,
+              backgroundImage: NetworkImage(
+                crew['profile_path'] != null
+                    ? "https://image.tmdb.org/t/p/w500" + crew['profile_path']
+                    : "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg",
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          Text(crew['name'],
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF9A9BB2)),
-            )
-          ],
-        ),
-      );
-    }
-    return Container();
+              maxLines: 2,
+              style: TextStyle(color: Colors.white70)),
+          SizedBox(height: 10),
+          Text(
+            "Creador",
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFF9A9BB2)),
+          )
+        ],
+      ),
+    );
   }
 }
 
