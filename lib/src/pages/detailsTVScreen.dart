@@ -104,7 +104,7 @@ class DetailsTVScreen extends StatelessWidget {
                                     child: Image.asset('assets/icons/imdb.jpg',
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteTVIMDB(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -123,7 +123,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -139,7 +139,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteTVMetacritic(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -158,7 +158,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -174,7 +174,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteTVFilmAffinity(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -193,7 +193,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             ),
 
@@ -209,7 +209,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                FutureBuilder(
+                                /*FutureBuilder(
                                     future: voteTVRottenTomatoes(tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -228,7 +228,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),
+                                    }),*/
                               ],
                             )
                           ],

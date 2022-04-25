@@ -27,6 +27,23 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
     }
   }
 
+  void init1(String urlProviders, String year) async {
+    try {
+      emit(state.copyWith(
+          movieStatus: MovieStatus.loading, query: urlProviders));
+      final movies = await repo.getmovies1(urlProviders, year, state.moviePage);
+      emit(
+        state.copyWith(
+          movieStatus: MovieStatus.loaded,
+          movies: movies[0],
+          moviePage: state.moviePage + 1,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(movieStatus: MovieStatus.error));
+    }
+  }
+
   void loadNextMoviePage() async {
     if (!state.moviesFull) {
       emit(state.copyWith(movieStatus: MovieStatus.adding));
