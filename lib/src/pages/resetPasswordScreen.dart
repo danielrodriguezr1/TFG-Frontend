@@ -38,7 +38,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 SizedBox(
                   height: size.height,
                   child: Image.asset(
-                    'assets/images/breakingbad.jpg',
+                    'assets/images/coco.jpg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),

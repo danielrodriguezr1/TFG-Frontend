@@ -2,12 +2,15 @@ import 'package:dio/dio.dart';
 
 class IMDBApiService {
   final Dio _dio = Dio();
+  final String myUrl = "https://api-danielrodriguez.herokuapp.com";
+
   final String baseUrl = "https://imdb-api.com/es/API";
   final String apiKey = 'k_yp2sap51';
 
   Future<String> voteIMDB(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['imDb'];
@@ -21,7 +24,8 @@ class IMDBApiService {
 
   Future<String> voteFilmAffinity(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['filmAffinity'];
@@ -35,7 +39,8 @@ class IMDBApiService {
 
   Future<String> voteMetacritic(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['metacritic'];
@@ -49,7 +54,8 @@ class IMDBApiService {
 
   Future<String> voteRottenTomatoes(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['rottenTomatoes'];
@@ -63,7 +69,8 @@ class IMDBApiService {
 
   Future<String> voteTVIMDB(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['imDb'];
@@ -77,7 +84,8 @@ class IMDBApiService {
 
   Future<String> voteTVFilmAffinity(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['filmAffinity'];
@@ -91,7 +99,8 @@ class IMDBApiService {
 
   Future<String> voteTVMetacritic(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['metacritic'];
@@ -105,7 +114,8 @@ class IMDBApiService {
 
   Future<String> voteTVRottenTomatoes(String id) async {
     try {
-      final url = '$baseUrl/Ratings/$apiKey/$id';
+      final url = '$myUrl/getRatings/$id';
+      //final url = '$baseUrl/Ratings/$apiKey/$id';
       print('Api Call: $url');
       final response = await _dio.get(url);
       String vote = response.data['rottenTomatoes'];

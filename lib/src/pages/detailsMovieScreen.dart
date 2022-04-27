@@ -100,7 +100,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                     child: Image.asset('assets/icons/imdb.jpg',
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
+                                FutureBuilder(
                                     future: voteIMDB(movie.id.toString()),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -119,7 +119,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -135,7 +135,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
+                                FutureBuilder(
                                     future: voteMetacritic(movie.id.toString()),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
@@ -154,7 +154,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -170,7 +170,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /*FutureBuilder(
+                                FutureBuilder(
                                     future:
                                         voteFilmAffinity(movie.id.toString()),
                                     builder: (context, snapshot) {
@@ -190,7 +190,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             ),
 
@@ -206,7 +206,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50)),
                                 SizedBox(height: 5),
-                                /* FutureBuilder(
+                                FutureBuilder(
                                     future:
                                         voteRottenTomatoes(movie.id.toString()),
                                     builder: (context, snapshot) {
@@ -226,7 +226,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                         ));
                                       }
                                       return Container();
-                                    }),*/
+                                    }),
                               ],
                             )
                           ],

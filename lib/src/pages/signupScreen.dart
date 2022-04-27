@@ -35,7 +35,7 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(
                   height: size.height,
                   child: Image.asset(
-                    'assets/images/lalaland.jpg',
+                    'assets/images/coco.jpg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),

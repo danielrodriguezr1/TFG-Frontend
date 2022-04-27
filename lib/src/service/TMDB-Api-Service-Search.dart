@@ -5,14 +5,15 @@ import 'package:tfgapp/src/models/tv.dart';
 
 class TMDBApiServiceSearchResults {
   final Dio _dio = Dio();
+  final String myUrl = "https://api-danielrodriguez.herokuapp.com";
 
   final String baseUrl = "https://api.themoviedb.org/3";
   final String apiKey = 'api_key=4da6190ae8146416740424c70e3a2b85';
 
   Future<List<dynamic>> getmovies(String query, int page) async {
     try {
-      final url =
-          '$baseUrl/search/movie?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
+      final url = '$myUrl/getMovies/:$query/:${page.toString()}';
+      //final url = '$baseUrl/search/movie?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
       print('Api Call: $url');
       final response = await _dio.get(url);
       var movies = response.data['results'] as List;
@@ -42,8 +43,8 @@ class TMDBApiServiceSearchResults {
 
   Future<List<dynamic>> gettvShows(String query, int page) async {
     try {
-      final url =
-          '$baseUrl/search/tv?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
+      final url = '$myUrl/getTVShows/:$query/:${page.toString()}';
+      //final url = '$baseUrl/search/tv?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
       print('Api Call: $url');
       final response = await _dio.get(url);
       var tv = response.data['results'] as List;
@@ -57,8 +58,8 @@ class TMDBApiServiceSearchResults {
 
   Future<List<dynamic>> getPersons(String query, int page) async {
     try {
-      final url =
-          '$baseUrl/search/person?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
+      final url = '$myUrl/getPersons/:$query/:${page.toString()}';
+      //final url = '$baseUrl/search/person?$apiKey&language=es-ES&query=$query&page=${page.toString()}';
       print('Api Call: $url');
       final response = await _dio.get(url);
       var people = response.data['results'] as List;
