@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:tfgapp/src/bloc/moviebloc/popularTV_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/popular_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/movie_bloc.dart';
@@ -10,8 +12,11 @@ import 'package:tfgapp/src/bloc/moviebloc/movie_bloc_event.dart';
 import 'package:tfgapp/src/bloc/moviebloc/topRated_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_event.dart';
 import 'package:tfgapp/src/cubit/search_results_cubit.dart';
+import 'package:tfgapp/src/models/country.dart';
+import 'package:tfgapp/src/pages/countries.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -24,6 +29,8 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isVisible = false;
   String urlProviders = "";
   String urlYears = "";
+  String urlRuntime = "";
+  String urlCountries = "";
 
   //PLATAFORMAS
   Color netflixSelected = Colors.transparent;
@@ -36,9 +43,19 @@ class _SearchScreenState extends State<SearchScreen> {
   Color mubiSelected = Colors.transparent;
 
   //AÑO
-  RangeValues values = RangeValues(1874, 2022);
-  RangeLabels labels = RangeLabels('1874', '2022');
+  RangeValues valuesYear = RangeValues(1874, 2022);
+  RangeLabels labelsYear = RangeLabels('1874', '2022');
 
+  //DURACION
+  RangeValues valuesRuntime = RangeValues(0, 180);
+  RangeLabels labelsRuntime = RangeLabels('0', '180');
+
+  //PAIS
+  static List<Country> countries = Resources.countries;
+  final _items = countries
+      .map((country) => MultiSelectItem(country, country.name))
+      .toList();
+  List<dynamic> _selectedCountries = [];
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -735,15 +752,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                     max: 2022,
                                     activeColor: Colors.white,
                                     inactiveColor: Colors.black12,
-                                    values: values,
+                                    values: valuesYear,
                                     divisions: 148,
-                                    labels: labels,
+                                    labels: labelsYear,
                                     onChanged: (value) {
                                       setState(() {
                                         urlYears =
                                             "primary_release_date.gte=${value.start.toInt().toString()}-01-01&primary_release_date.lte=${value.end.toInt().toString()}-12-31";
-                                        values = value;
-                                        labels = RangeLabels(
+                                        valuesYear = value;
+                                        labelsYear = RangeLabels(
                                             '${value.start.toInt().toString()}',
                                             '${value.end.toInt().toString()}');
                                       });
@@ -752,16 +769,137 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 buildSideLabel(2022)
                               ]),
-                              SizedBox(height: 20),
-                              SizedBox(height: 80),
+                              SizedBox(height: 60),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Elige la duración",
+                                      style: TextStyle(color: Colors.white70))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(children: [
+                                buildSideLabel(0),
+                                Expanded(
+                                  child: RangeSlider(
+                                    min: 0,
+                                    max: 180,
+                                    activeColor: Colors.white,
+                                    inactiveColor: Colors.black12,
+                                    values: valuesRuntime,
+                                    divisions: 36,
+                                    labels: labelsRuntime,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        var valueEnd =
+                                            value.end.toInt().toString();
+                                        if (valueEnd == "180") valueEnd = "";
+                                        urlRuntime =
+                                            "with_runtime.gte=${value.start.toInt().toString()}&with_runtime.lte=${valueEnd}";
+                                        valuesRuntime = value;
+                                        labelsRuntime = RangeLabels(
+                                            '${value.start.toInt().toString()}',
+                                            '${value.end.toInt().toString()}');
+                                      });
+                                    },
+                                  ),
+                                ),
+                                buildSideLabel(180)
+                              ]),
+                              SizedBox(height: 60),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Elige el país",
+                                      style: TextStyle(color: Colors.white70))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Builder(
+                                builder: (context) => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    MultiSelectDialogField(
+                                      searchable: true,
+                                      searchTextStyle:
+                                          TextStyle(color: Colors.white),
+                                      searchIcon: Icon(Icons.search,
+                                          color: Colors.white),
+                                      searchHint: "Buscar país...",
+                                      searchHintStyle:
+                                          TextStyle(color: Colors.white),
+                                      closeSearchIcon: Icon(Icons.close,
+                                          color: Colors.white),
+                                      backgroundColor: Color(0xFF282828),
+                                      checkColor: Colors.black,
+                                      selectedItemsTextStyle:
+                                          TextStyle(color: Colors.white),
+                                      itemsTextStyle:
+                                          TextStyle(color: Colors.white70),
+                                      items: _items,
+                                      confirmText: Text("Aceptar"),
+                                      cancelText: Text("Cancelar"),
+                                      title: Text("Países",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      selectedColor: Colors.white70,
+                                      unselectedColor: Colors.white70,
+                                      chipDisplay: MultiSelectChipDisplay(
+                                        textStyle:
+                                            TextStyle(color: Colors.white),
+                                        chipColor: Colors.grey,
+                                        alignment: Alignment.center,
+                                        scrollBar: HorizontalScrollBar(),
+                                        scroll: true,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(40)),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      buttonIcon: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      buttonText: Text(
+                                        "Seleccionar países",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      onConfirm: (results) {
+                                        urlCountries = "";
+                                        _selectedCountries = results;
+                                        setState(() {
+                                          for (int i = 0;
+                                              i < _selectedCountries.length;
+                                              i++) {
+                                            String codeCountry =
+                                                _selectedCountries[i]
+                                                    .toString()
+                                                    .substring(5, 7);
+                                            urlCountries += "|$codeCountry";
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 50),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton(
                                     onPressed: () {
                                       print(urlProviders);
-                                      print(values.start.toString());
-                                      print(values.end.toString());
+                                      print(valuesYear.start.toString());
+                                      print(valuesYear.end.toString());
                                       if (urlProviders == "")
                                         urlProviders = "0";
                                       Navigator.push(
@@ -771,8 +909,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   BlocProvider(
                                                     create: (context) =>
                                                         SearchResultsCubit()
-                                                          ..init1(urlProviders,
-                                                              urlYears),
+                                                          ..init1(
+                                                              urlProviders,
+                                                              urlYears,
+                                                              urlRuntime,
+                                                              urlCountries),
                                                     child: SearchResults(
                                                         query: urlProviders),
                                                   )));

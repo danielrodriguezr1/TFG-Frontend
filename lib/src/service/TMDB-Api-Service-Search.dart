@@ -25,11 +25,10 @@ class TMDBApiServiceSearchResults {
     }
   }
 
-  Future<List<dynamic>> getmovies1(
-      String providers, String year, int page) async {
+  Future<List<dynamic>> getmovies1(String query, int page) async {
     try {
       final url =
-          '$baseUrl/discover/movie?$apiKey&language=es-ES&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${page.toString()}&$year&vote_count.gte=300&with_watch_providers=$providers&watch_region=ES&with_watch_monetization_types=flatrate';
+          '$baseUrl/discover/movie?$apiKey&language=es-ES&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${page.toString()}&$query';
       print('Api Call: $url');
       final response = await _dio.get(url);
       var movies = response.data['results'] as List;

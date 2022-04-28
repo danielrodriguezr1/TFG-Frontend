@@ -25,7 +25,7 @@ class _SearchResultsState extends State<SearchResults> {
   ScrollController tvController = ScrollController();
   ScrollController personController = ScrollController();
   int currentPage = 0;
-  /*late*/ PageController pageViewController;
+  PageController pageViewController;
   @override
   void initState() {
     super.initState();
@@ -34,7 +34,7 @@ class _SearchResultsState extends State<SearchResults> {
     );
     movieController.addListener(movieScrollListener);
     tvController.addListener(tvScrollListener);
-    //personController.addListener(personScrollListener);
+    personController.addListener(personScrollListener);
   }
 
   void movieScrollListener() {

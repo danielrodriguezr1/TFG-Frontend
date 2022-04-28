@@ -27,11 +27,13 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
     }
   }
 
-  void init1(String urlProviders, String year) async {
+  void init1(String urlProviders, String year, String urlRuntime,
+      String urlCountries) async {
     try {
-      emit(state.copyWith(
-          movieStatus: MovieStatus.loading, query: urlProviders));
-      final movies = await repo.getmovies1(urlProviders, year, state.moviePage);
+      String finalQuery =
+          "$year&vote_count.gte=300&$urlRuntime&with_origin_country=$urlCountries&with_watch_providers=$urlProviders&watch_region=ES&with_watch_monetization_types=flatrate";
+      emit(state.copyWith(movieStatus: MovieStatus.loading, query: finalQuery));
+      final movies = await repo.getmovies1(finalQuery, state.moviePage);
       emit(
         state.copyWith(
           movieStatus: MovieStatus.loaded,
@@ -47,7 +49,7 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
   void loadNextMoviePage() async {
     if (!state.moviesFull) {
       emit(state.copyWith(movieStatus: MovieStatus.adding));
-      final movies = await repo.getmovies(state.query, state.moviePage);
+      final movies = await repo.getmovies1(state.query, state.moviePage);
       state.movies.addAll(movies[0]);
       emit(
         state.copyWith(
