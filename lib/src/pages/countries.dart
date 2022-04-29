@@ -3,6 +3,7 @@ import 'package:tfgapp/src/models/country.dart';
 
 class Countries {
   static final List<Country> countries = [
+    Country(code: "ES", name: "Espa\u00f1a"),
     Country(code: "AF", name: "Afganist\u00e1n"),
     Country(code: "AL", name: "Albania"),
     Country(code: "DE", name: "Alemania"),
@@ -68,7 +69,6 @@ class Countries {
     Country(code: "ER", name: "Eritrea"),
     Country(code: "SK", name: "Eslovaquia"),
     Country(code: "SI", name: "Eslovenia"),
-    Country(code: "ES", name: "Espa\u00f1a"),
     Country(code: "US", name: "Estados Unidos"),
     Country(code: "EE", name: "Estonia"),
     Country(code: "SZ", name: "Esuatini"),

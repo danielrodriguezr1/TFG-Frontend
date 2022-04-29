@@ -11,9 +11,11 @@ import 'package:tfgapp/src/cubit/search_results_cubit.dart';
 
 class SearchResults extends StatefulWidget {
   final String query;
+  final bool buttonsBool;
   const SearchResults({
     Key key,
     this.query,
+    this.buttonsBool,
   }) : super(key: key);
 
   @override
@@ -324,87 +326,100 @@ class _SearchResultsState extends State<SearchResults> {
                                 ),
                                 onTap: () => Navigator.of(context).pop(),
                               ),
-                              /*Text(
-                                'Resultados para "${widget.query}"',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),*/
+                              widget.buttonsBool == true
+                                  ? Text(
+                                      'Resultados para "${widget.query}"',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : Container(),
                             ],
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                ...buttons.map(
-                                  (button) => Container(
-                                    margin: const EdgeInsets.only(left: 10),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: currentPage ==
-                                                buttons.indexOf(button)
-                                            ? Theme.of(context).primaryColor
-                                            : Colors.grey.shade700,
-                                        width: .6,
-                                      ),
-                                      color:
-                                          currentPage == buttons.indexOf(button)
-                                              ? Colors.cyanAccent
-                                              : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: InkWell(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14.0, vertical: 4),
-                                        child: Text(
-                                          button,
-                                          style: TextStyle(
-                                            fontSize: 16,
+                          widget.buttonsBool == true
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      ...buttons.map(
+                                        (button) => Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: currentPage ==
+                                                      buttons.indexOf(button)
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : Colors.grey.shade700,
+                                              width: .6,
+                                            ),
                                             color: currentPage ==
                                                     buttons.indexOf(button)
-                                                ? Colors.black
-                                                : Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                                ? Colors.cyanAccent
+                                                : Colors.transparent,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: InkWell(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 14.0,
+                                                      vertical: 4),
+                                              child: Text(
+                                                button,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: currentPage ==
+                                                          buttons
+                                                              .indexOf(button)
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              setState(() {
+                                                currentPage =
+                                                    buttons.indexOf(button);
+                                              });
+
+                                              pageViewController.animateToPage(
+                                                  currentPage,
+                                                  duration: const Duration(
+                                                      microseconds: 1000),
+                                                  curve: Curves.bounceInOut);
+                                              if (currentPage == 1) {
+                                                if (state.shows.isEmpty) {
+                                                  BlocProvider.of<
+                                                              SearchResultsCubit>(
+                                                          context)
+                                                      .initTv(widget.query);
+                                                }
+                                              }
+                                              if (currentPage == 2) {
+                                                if (state.people.isEmpty) {
+                                                  BlocProvider.of<
+                                                              SearchResultsCubit>(
+                                                          context)
+                                                      .initPeople(widget.query);
+                                                }
+                                              }
+                                            },
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
-                                        setState(() {
-                                          currentPage = buttons.indexOf(button);
-                                        });
-
-                                        pageViewController.animateToPage(
-                                            currentPage,
-                                            duration: const Duration(
-                                                microseconds: 1000),
-                                            curve: Curves.bounceInOut);
-                                        if (currentPage == 1) {
-                                          if (state.shows.isEmpty) {
-                                            BlocProvider.of<SearchResultsCubit>(
-                                                    context)
-                                                .initTv(widget.query);
-                                          }
-                                        }
-                                        if (currentPage == 2) {
-                                          if (state.people.isEmpty) {
-                                            BlocProvider.of<SearchResultsCubit>(
-                                                    context)
-                                                .initPeople(widget.query);
-                                          }
-                                        }
-                                      },
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),

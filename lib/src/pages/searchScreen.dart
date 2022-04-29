@@ -34,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String urlRuntime = "";
   String urlCountries = "";
   String urlGenres = "";
-  String urlVoteCount = "";
+  String urlVoteCount = "vote_count.gte=500";
   String urlVoteAverage = "";
 
   //PLATAFORMAS
@@ -69,8 +69,8 @@ class _SearchScreenState extends State<SearchScreen> {
   List<dynamic> _selectedGenres = [];
 
   //VOTOS MINIMOS
-  RangeValues valuesVoteCount = RangeValues(0, 5000);
-  RangeLabels labelsVoteCount = RangeLabels('0', '5000');
+  RangeValues valuesVoteCount = RangeValues(500, 5000);
+  RangeLabels labelsVoteCount = RangeLabels('500', '5000');
 
   //VALORACION MEDIA
   RangeValues valuesVoteAverage = RangeValues(0.0, 10.0);
@@ -270,7 +270,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       SearchResultsCubit()
                                                         ..init(query),
                                                   child: SearchResults(
-                                                      query: query),
+                                                    query: query,
+                                                    buttonsBool: true,
+                                                  ),
                                                 )));
 
                                     Navigator.push(
@@ -282,7 +284,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                       SearchResultsCubit()
                                                         ..init(query),
                                                   child: SearchResults(
-                                                      query: query),
+                                                    query: query,
+                                                    buttonsBool: true,
+                                                  ),
                                                 )));
                                   }
                                 },
@@ -312,7 +316,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    "Introduce los filtros necesarios para encontrar la película o serie que más se ajuste a tus preferencias",
+                                    "Introduce los filtros necesarios para encontrar la película o serie que más se ajuste a tus preferencias.",
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     textDirection: TextDirection.rtl,
@@ -1111,7 +1115,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                               urlVoteCount,
                                                               urlVoteAverage),
                                                     child: SearchResults(
-                                                        query: urlProviders),
+                                                      query: urlProviders,
+                                                      buttonsBool: false,
+                                                    ),
                                                   )));
                                     },
                                     child: Text("BUSCAR",
