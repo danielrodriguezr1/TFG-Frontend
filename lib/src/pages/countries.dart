@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:tfgapp/src/models/country.dart';
 
-class Resources {
+class Countries {
   static final List<Country> countries = [
     Country(code: "AF", name: "Afganist\u00e1n"),
     Country(code: "AL", name: "Albania"),

@@ -13,7 +13,9 @@ import 'package:tfgapp/src/bloc/moviebloc/topRated_bloc.dart';
 import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_event.dart';
 import 'package:tfgapp/src/cubit/search_results_cubit.dart';
 import 'package:tfgapp/src/models/country.dart';
+import 'package:tfgapp/src/models/genre.dart';
 import 'package:tfgapp/src/pages/countries.dart';
+import 'package:tfgapp/src/pages/genres.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -31,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String urlYears = "";
   String urlRuntime = "";
   String urlCountries = "";
+  String urlGenres = "";
 
   //PLATAFORMAS
   Color netflixSelected = Colors.transparent;
@@ -51,11 +54,18 @@ class _SearchScreenState extends State<SearchScreen> {
   RangeLabels labelsRuntime = RangeLabels('0', '180');
 
   //PAIS
-  static List<Country> countries = Resources.countries;
-  final _items = countries
+  static List<Country> countries = Countries.countries;
+  final _itemsCountries = countries
       .map((country) => MultiSelectItem(country, country.name))
       .toList();
   List<dynamic> _selectedCountries = [];
+
+  //GENEROS
+  static List<Genre> genres = Genres.genres;
+  final _itemsGenres =
+      genres.map((genre) => MultiSelectItem(genre, genre.name)).toList();
+  List<dynamic> _selectedGenres = [];
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -353,6 +363,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ],
                               ),
                               SizedBox(height: 20),
+
+                              //PLATAFORMAS
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -736,6 +748,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ),
                                   ]),
                               SizedBox(height: 60),
+
+                              //AÑO
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -770,6 +784,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 buildSideLabel(2022)
                               ]),
                               SizedBox(height: 60),
+
+                              //DURACION
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -807,6 +823,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 buildSideLabel(180)
                               ]),
                               SizedBox(height: 60),
+
+                              //PAISES
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -836,7 +854,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           TextStyle(color: Colors.white),
                                       itemsTextStyle:
                                           TextStyle(color: Colors.white70),
-                                      items: _items,
+                                      items: _itemsCountries,
                                       confirmText: Text("Aceptar"),
                                       cancelText: Text("Cancelar"),
                                       title: Text("Países",
@@ -891,6 +909,94 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ],
                                 ),
                               ),
+
+                              //GENEROS
+                              SizedBox(height: 60),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Elige el género",
+                                      style: TextStyle(color: Colors.white70))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Builder(
+                                builder: (context) => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    MultiSelectDialogField(
+                                      searchable: true,
+                                      searchTextStyle:
+                                          TextStyle(color: Colors.white),
+                                      searchIcon: Icon(Icons.search,
+                                          color: Colors.white),
+                                      searchHint: "Buscar género...",
+                                      searchHintStyle:
+                                          TextStyle(color: Colors.white),
+                                      closeSearchIcon: Icon(Icons.close,
+                                          color: Colors.white),
+                                      backgroundColor: Color(0xFF282828),
+                                      checkColor: Colors.black,
+                                      selectedItemsTextStyle:
+                                          TextStyle(color: Colors.white),
+                                      itemsTextStyle:
+                                          TextStyle(color: Colors.white70),
+                                      items: _itemsGenres,
+                                      confirmText: Text("Aceptar"),
+                                      cancelText: Text("Cancelar"),
+                                      title: Text("Géneros",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      selectedColor: Colors.white70,
+                                      unselectedColor: Colors.white70,
+                                      chipDisplay: MultiSelectChipDisplay(
+                                        textStyle:
+                                            TextStyle(color: Colors.white),
+                                        chipColor: Colors.grey,
+                                        alignment: Alignment.center,
+                                        scrollBar: HorizontalScrollBar(),
+                                        scroll: true,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(40)),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      buttonIcon: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      buttonText: Text(
+                                        "Seleccionar géneros",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      onConfirm: (results) {
+                                        urlGenres = "";
+                                        _selectedGenres = results;
+                                        setState(() {
+                                          for (int i = 0;
+                                              i < _selectedGenres.length;
+                                              i++) {
+                                            String codeGenre =
+                                                _selectedGenres[i]
+                                                    .toString()
+                                                    .substring(5, 7);
+                                            urlGenres += ",$codeGenre";
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                               SizedBox(height: 50),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -913,7 +1019,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                               urlProviders,
                                                               urlYears,
                                                               urlRuntime,
-                                                              urlCountries),
+                                                              urlCountries,
+                                                              urlGenres),
                                                     child: SearchResults(
                                                         query: urlProviders),
                                                   )));
