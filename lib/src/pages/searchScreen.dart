@@ -34,6 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
   String urlRuntime = "";
   String urlCountries = "";
   String urlGenres = "";
+  String urlVoteCount = "";
+  String urlVoteAverage = "";
 
   //PLATAFORMAS
   Color netflixSelected = Colors.transparent;
@@ -65,6 +67,14 @@ class _SearchScreenState extends State<SearchScreen> {
   final _itemsGenres =
       genres.map((genre) => MultiSelectItem(genre, genre.name)).toList();
   List<dynamic> _selectedGenres = [];
+
+  //VOTOS MINIMOS
+  RangeValues valuesVoteCount = RangeValues(0, 5000);
+  RangeLabels labelsVoteCount = RangeLabels('0', '5000');
+
+  //VALORACION MEDIA
+  RangeValues valuesVoteAverage = RangeValues(0.0, 10.0);
+  RangeLabels labelsVoteAverage = RangeLabels('0.0', '10.0');
 
   @override
   Widget build(BuildContext context) {
@@ -759,7 +769,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               SizedBox(height: 10),
                               Row(children: [
-                                buildSideLabel(1874),
+                                buildSideLabel("1874"),
                                 Expanded(
                                   child: RangeSlider(
                                     min: 1874,
@@ -781,7 +791,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     },
                                   ),
                                 ),
-                                buildSideLabel(2022)
+                                buildSideLabel("2022")
                               ]),
                               SizedBox(height: 60),
 
@@ -795,7 +805,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               SizedBox(height: 10),
                               Row(children: [
-                                buildSideLabel(0),
+                                buildSideLabel("0"),
                                 Expanded(
                                   child: RangeSlider(
                                     min: 0,
@@ -820,7 +830,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     },
                                   ),
                                 ),
-                                buildSideLabel(180)
+                                buildSideLabel("+180")
                               ]),
                               SizedBox(height: 60),
 
@@ -997,6 +1007,83 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ),
 
+                              //VOTE COUNT
+                              SizedBox(height: 60),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Elige el número de votos mínimos",
+                                      style: TextStyle(color: Colors.white70))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(children: [
+                                buildSideLabel("0"),
+                                Expanded(
+                                  child: RangeSlider(
+                                    min: 0,
+                                    max: 5000,
+                                    activeColor: Colors.white,
+                                    inactiveColor: Colors.black12,
+                                    values: valuesVoteCount,
+                                    divisions: 50,
+                                    labels: labelsVoteCount,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        var valueEnd =
+                                            value.end.toInt().toString();
+                                        if (valueEnd == "5000") valueEnd = "";
+                                        urlVoteCount =
+                                            "vote_count.gte=${value.start.toInt().toString()}&vote_count.lte=${valueEnd}";
+                                        valuesVoteCount = value;
+                                        labelsVoteCount = RangeLabels(
+                                            '${value.start.toInt().toString()}',
+                                            '${value.end.toInt().toString()}');
+                                      });
+                                    },
+                                  ),
+                                ),
+                                buildSideLabel("+5000")
+                              ]),
+
+                              //VOTE AVERAGE
+                              SizedBox(height: 60),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Elige la valoración",
+                                      style: TextStyle(color: Colors.white70))
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(children: [
+                                buildSideLabel("0"),
+                                Expanded(
+                                  child: RangeSlider(
+                                    min: 0,
+                                    max: 10,
+                                    activeColor: Colors.white,
+                                    inactiveColor: Colors.black12,
+                                    values: valuesVoteAverage,
+                                    divisions: 20,
+                                    labels: labelsVoteAverage,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        value.end.toInt().toString();
+                                        urlVoteAverage =
+                                            "vote_average.gte=${double.parse(value.start.toString())}&vote_average.lte=${double.parse(value.end.toString())}";
+                                        valuesVoteAverage = value;
+                                        labelsVoteAverage = RangeLabels(
+                                            '${double.parse(value.start.toString())}',
+                                            '${double.parse(value.end.toString())}');
+                                      });
+                                    },
+                                  ),
+                                ),
+                                buildSideLabel("10")
+                              ]),
+
+                              //BOTON BUSCAR
                               SizedBox(height: 50),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1020,7 +1107,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                               urlYears,
                                                               urlRuntime,
                                                               urlCountries,
-                                                              urlGenres),
+                                                              urlGenres,
+                                                              urlVoteCount,
+                                                              urlVoteAverage),
                                                     child: SearchResults(
                                                         query: urlProviders),
                                                   )));
@@ -1041,11 +1130,12 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget buildSideLabel(double value) => Container(
+  Widget buildSideLabel(String value) => Container(
       padding: EdgeInsets.only(left: 5.0, right: 5.0),
-      width: 45,
+      width: 50,
       child: Text(
-        value.round().toString(),
+        value,
+        //value.round().toString(),
         style: TextStyle(fontSize: 14, color: Colors.white70),
         textAlign: TextAlign.center,
       ));
