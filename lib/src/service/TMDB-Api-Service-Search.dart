@@ -55,6 +55,21 @@ class TMDBApiServiceSearchResults {
     }
   }
 
+  Future<List<dynamic>> gettvShows1(String query, int page) async {
+    try {
+      final url =
+          '$baseUrl/discover/tv?$apiKey&language=es-ES&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${page.toString()}&$query';
+      print('Apiiii Call: $url');
+      final response = await _dio.get(url);
+      var shows = response.data['results'] as List;
+      List<TV> tvList = shows.map((m) => TV.fromJson(m)).toList();
+      return [tvList, response.data['total_pages']];
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
   Future<List<dynamic>> getPersons(String query, int page) async {
     try {
       final url = '$myUrl/getPersons/:$query/:${page.toString()}';

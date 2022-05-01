@@ -118,6 +118,32 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
     }
   }
 
+  void initTV1(
+      String urlProviders,
+      String year,
+      String urlRuntime,
+      String urlCountries,
+      String urlGenres,
+      String urlVoteCount,
+      String urlVoteAverage,
+      String urlStatusTV) async {
+    try {
+      String finalQuery =
+          "$year&$urlVoteCount&$urlVoteAverage&with_genres=$urlGenres&$urlRuntime&with_origin_country=$urlCountries&with_watch_providers=$urlProviders&watch_region=ES&$urlStatusTV&with_watch_monetization_types=flatrate";
+      emit(state.copyWith(movieStatus: MovieStatus.loading, query: finalQuery));
+      final shows = await repo.gettvShows1(finalQuery, state.tvPage);
+      emit(
+        state.copyWith(
+          tvStatus: TvStatus.loaded,
+          shows: shows[0],
+          tvPage: state.tvPage + 1,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(movieStatus: MovieStatus.error));
+    }
+  }
+
   void initPeople(String query) async {
     try {
       emit(state.copyWith(peopleStatus: PeopleStatus.loading));

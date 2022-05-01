@@ -1,7 +1,7 @@
 import 'package:tfgapp/src/models/genre.dart';
 import 'dart:core';
 
-class Genres {
+class GenresMovie {
   static final List<Genre> genres = [
     Genre(code: "28", name: "Acción"),
     Genre(code: "12", name: "Aventura"),
