@@ -14,12 +14,15 @@ import 'package:tfgapp/src/bloc/moviebloc/tv_bloc_event.dart';
 import 'package:tfgapp/src/cubit/search_results_cubit.dart';
 import 'package:tfgapp/src/models/country.dart';
 import 'package:tfgapp/src/models/genre.dart';
+import 'package:tfgapp/src/models/provider.dart';
 import 'package:tfgapp/src/pages/countries.dart';
 import 'package:tfgapp/src/pages/genresMovie.dart';
 import 'package:tfgapp/src/pages/genresTV.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
+import 'package:tfgapp/src/pages/providers.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -28,8 +31,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   int _paginaActual = 0;
-  bool isMovie;
+  bool isMovie = true;
   String urlProviders = "";
+  String urlProviders2 = "";
   String urlYears = "";
   String urlRuntime = "";
   String urlRuntimeEpisodeTV = "";
@@ -49,6 +53,12 @@ class _SearchScreenState extends State<SearchScreen> {
   Color appleTVSelected = Colors.transparent;
   Color rakutenSelected = Colors.transparent;
   Color mubiSelected = Colors.transparent;
+
+  static List<Provider> providers = Providers.providers;
+  final _itemsProviders = providers
+      .map((provider) => MultiSelectItem(provider, provider.name))
+      .toList();
+  List<dynamic> _selectedProviders = [];
 
   //AÑO
   RangeValues valuesYear = RangeValues(1874, 2022);
@@ -89,6 +99,10 @@ class _SearchScreenState extends State<SearchScreen> {
   //VALORACION MEDIA
   RangeValues valuesVoteAverage = RangeValues(0.0, 10.0);
   RangeLabels labelsVoteAverage = RangeLabels('0.0', '10.0');
+
+  //TOGGLEs
+  int initialIndex1 = 0;
+  int initialIndex2 = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -342,41 +356,42 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ])),
                       SizedBox(height: 10),
+
+                      //ELEGIR PELICULA O SERIE
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                isMovie = true;
-                              });
-                            },
-                            child: Text(
-                              "Película",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white70)),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10)),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                isMovie = false;
-                              });
-                            },
-                            child: Text(
-                              "Serie",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white70)),
-                          ),
-                        ],
-                      ),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ToggleSwitch(
+                              minWidth: 100.0,
+                              initialLabelIndex: initialIndex1,
+                              cornerRadius: 20.0,
+                              activeFgColor: Colors.white,
+                              inactiveBgColor: Colors.grey,
+                              inactiveFgColor: Colors.white,
+                              totalSwitches: 2,
+                              labels: ['Película', 'Serie'],
+                              icons: [Icons.movie, Icons.tv],
+                              customTextStyles: [
+                                TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700)
+                              ],
+                              activeBgColors: [
+                                [Color(0xFFF4C10F)],
+                                [Color(0xFFF4C10F)]
+                              ],
+                              onToggle: (index) {
+                                print('switched to: $index');
+                                setState(() {
+                                  initialIndex1 = index;
+                                  if (index == 0)
+                                    isMovie = true;
+                                  else
+                                    isMovie = false;
+                                });
+                              },
+                            )
+                          ]),
                       SizedBox(height: 30),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -457,12 +472,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                           if (primeVideoSelected ==
                                               Colors.transparent) {
                                             primeVideoSelected = Colors.white;
-                                            urlProviders += "|119";
+                                            urlProviders += "|119|9";
                                           } else {
                                             primeVideoSelected =
                                                 Colors.transparent;
                                             urlProviders = urlProviders
-                                                .replaceAll("|119", "");
+                                                .replaceAll("|119|9", "");
                                           }
                                         });
                                       },
@@ -755,6 +770,82 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ],
                                 ),
                               ]),
+                          SizedBox(height: 30),
+                          Builder(
+                            builder: (context) => Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MultiSelectDialogField(
+                                    searchable: true,
+                                    searchTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    searchIcon:
+                                        Icon(Icons.search, color: Colors.white),
+                                    searchHint: "Buscar plataforma...",
+                                    searchHintStyle:
+                                        TextStyle(color: Colors.white),
+                                    closeSearchIcon:
+                                        Icon(Icons.close, color: Colors.white),
+                                    backgroundColor: Color(0xFF282828),
+                                    checkColor: Colors.black,
+                                    selectedItemsTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    itemsTextStyle:
+                                        TextStyle(color: Colors.white70),
+                                    items: _itemsProviders,
+                                    confirmText: Text("Aceptar"),
+                                    cancelText: Text("Cancelar"),
+                                    title: Text("Plataformas",
+                                        style: TextStyle(color: Colors.white)),
+                                    selectedColor: Colors.white70,
+                                    unselectedColor: Colors.white70,
+                                    chipDisplay: MultiSelectChipDisplay(
+                                      textStyle: TextStyle(color: Colors.white),
+                                      chipColor: Colors.grey,
+                                      alignment: Alignment.center,
+                                      scrollBar: HorizontalScrollBar(),
+                                      scroll: true,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.1),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(40)),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    buttonIcon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    buttonText: Text(
+                                      "Selecciona otra plataforma",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    onConfirm: (results) {
+                                      _selectedProviders = results;
+                                      setState(() {
+                                        urlProviders2 = "";
+                                        for (int i = 0;
+                                            i < _selectedProviders.length;
+                                            i++) {
+                                          String codeProvider =
+                                              _selectedProviders[i]
+                                                  .toString()
+                                                  .replaceAll(
+                                                      new RegExp(r'[^0-9]'),
+                                                      '');
+                                          urlProviders2 += "|$codeProvider";
+                                        }
+                                      });
+                                    }),
+                              ],
+                            ),
+                          ),
                           SizedBox(height: 60),
 
                           //AÑO
@@ -1145,7 +1236,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             buildSideLabel("10")
                           ]),
 
-                          SizedBox(height: 60),
+                          (isMovie == false)
+                              ? SizedBox(height: 50)
+                              : SizedBox(height: 10),
                           //ESTADO SERIE
                           (isMovie == false)
                               ? Row(
@@ -1159,134 +1252,157 @@ class _SearchScreenState extends State<SearchScreen> {
                                   height: 0,
                                 ),
 
-                          SizedBox(height: 10),
+                          SizedBox(height: 20),
                           (isMovie == false)
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    ElevatedButton(
-                                      onPressed: () {
+                                    ToggleSwitch(
+                                      minWidth: 100,
+                                      cornerRadius: 20.0,
+                                      activeFgColor: Colors.white,
+                                      inactiveBgColor: Colors.grey,
+                                      inactiveFgColor: Colors.white,
+                                      initialLabelIndex: initialIndex2,
+                                      totalSwitches: 3,
+                                      labels: [
+                                        'En emisión',
+                                        'Finlizada',
+                                        'No importa'
+                                      ],
+                                      customTextStyles: [
+                                        TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700)
+                                      ],
+                                      activeBgColors: [
+                                        [Color(0xFFF4C10F)],
+                                        [Color(0xFFF4C10F)],
+                                        [Color(0xFFF4C10F)]
+                                      ],
+                                      onToggle: (index) {
+                                        print('switched to: $index');
                                         setState(() {
-                                          urlStatusTV = "with_status=0";
+                                          initialIndex2 = index;
+                                          if (index == 0)
+                                            urlStatusTV = "with_status=0";
+                                          else if (index == 1)
+                                            urlStatusTV = "with_status=2";
                                         });
                                       },
-                                      child: Text(
-                                        "En emisión",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white70)),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10)),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          urlStatusTV = "with_status=2";
-                                        });
-                                      },
-                                      child: Text(
-                                        "Finalizada",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white70)),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10)),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {});
-                                      },
-                                      child: Text(
-                                        "No importa",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white70)),
-                                    ),
+                                    )
                                   ],
                                 )
                               : SizedBox(height: 0),
 
                           //BOTON BUSCAR
-                          SizedBox(height: 50),
+                          (isMovie == false)
+                              ? SizedBox(height: 50)
+                              : SizedBox(height: 0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TextButton(
-                                onPressed: () {
-                                  print(urlProviders);
-                                  print(valuesYear.start.toString());
-                                  print(valuesYear.end.toString());
-                                  if (urlProviders == "") urlProviders = "0";
+                              Container(
+                                height: 40.0,
+                                margin: EdgeInsets.all(10),
+                                child: RaisedButton(
+                                  onPressed: () {
+                                    print(urlProviders);
+                                    print(valuesYear.start.toString());
+                                    print(valuesYear.end.toString());
 
-                                  if (isMovie) {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                            pageBuilder: (_, __, ___) =>
-                                                BlocProvider(
-                                                  create: (context) =>
-                                                      SearchResultsCubit()
-                                                        ..init1(
-                                                            urlProviders,
-                                                            urlYears,
-                                                            urlRuntime,
-                                                            urlCountries,
-                                                            urlGenres,
-                                                            urlVoteCount,
-                                                            urlVoteAverage),
-                                                  child: SearchResults(
-                                                    query: urlProviders,
-                                                    buttonsBool: false,
-                                                    discover: false,
-                                                  ),
-                                                )));
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                            pageBuilder: (_, __, ___) =>
-                                                BlocProvider(
-                                                  create: (context) =>
-                                                      SearchResultsCubit()
-                                                        ..initTV1(
-                                                            urlProviders,
-                                                            urlYears,
-                                                            urlRuntimeEpisodeTV,
-                                                            urlCountries,
-                                                            urlGenres,
-                                                            urlVoteCount,
-                                                            urlVoteAverage,
-                                                            urlStatusTV),
-                                                  child: SearchResults(
-                                                    urlProviders: urlProviders,
-                                                    urlYears: urlYears,
-                                                    urlRuntimeEpisodeTV:
-                                                        urlRuntimeEpisodeTV,
-                                                    urlCountries: urlCountries,
-                                                    urlGenres: urlGenres,
-                                                    urlVoteCount: urlVoteCount,
-                                                    urlVoteAverage:
-                                                        urlVoteAverage,
-                                                    urlStatusTV: urlStatusTV,
-                                                    discover: true,
-                                                    buttonsBool: false,
-                                                  ),
-                                                )));
-                                  }
-                                },
-                                child: Text("BUSCAR",
-                                    style: TextStyle(color: Colors.white)),
+                                    String urlProvidersEnd =
+                                        (urlProviders + urlProviders2);
+                                    if (urlProviders == "") urlProviders = "0";
+                                    print("HOLAAAAAAAAA$urlProviders");
+                                    if (isMovie) {
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  BlocProvider(
+                                                    create: (context) =>
+                                                        SearchResultsCubit()
+                                                          ..init1(
+                                                              urlProvidersEnd,
+                                                              urlYears,
+                                                              urlRuntime,
+                                                              urlCountries,
+                                                              urlGenres,
+                                                              urlVoteCount,
+                                                              urlVoteAverage),
+                                                    child: SearchResults(
+                                                      query: urlProvidersEnd,
+                                                      buttonsBool: false,
+                                                      discover: false,
+                                                    ),
+                                                  )));
+                                    } else {
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  BlocProvider(
+                                                    create: (context) =>
+                                                        SearchResultsCubit()
+                                                          ..initTV1(
+                                                              urlProvidersEnd,
+                                                              urlYears,
+                                                              urlRuntimeEpisodeTV,
+                                                              urlCountries,
+                                                              urlGenres,
+                                                              urlVoteCount,
+                                                              urlVoteAverage,
+                                                              urlStatusTV),
+                                                    child: SearchResults(
+                                                      urlProviders:
+                                                          urlProvidersEnd,
+                                                      urlYears: urlYears,
+                                                      urlRuntimeEpisodeTV:
+                                                          urlRuntimeEpisodeTV,
+                                                      urlCountries:
+                                                          urlCountries,
+                                                      urlGenres: urlGenres,
+                                                      urlVoteCount:
+                                                          urlVoteCount,
+                                                      urlVoteAverage:
+                                                          urlVoteAverage,
+                                                      urlStatusTV: urlStatusTV,
+                                                      discover: true,
+                                                      buttonsBool: false,
+                                                    ),
+                                                  )));
+                                    }
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(80.0)),
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFF7a7a7a),
+                                            Color(0xffd6d6d6)
+                                          ],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                          maxWidth: 150.0, maxHeight: 40.0),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Buscar",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               )
                             ],
                           )

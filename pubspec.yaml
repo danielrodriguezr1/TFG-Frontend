@@ -43,6 +43,7 @@ dependencies:
   flutter_svg: ^1.0.0
   dart_countries: ^3.0.2
   multi_select_flutter: ^3.1.8
+  toggle_switch: ^2.0.1
 
 dev_dependencies:
 
