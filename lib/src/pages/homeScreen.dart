@@ -19,6 +19,7 @@ import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/pages/detailsMovieScreen.dart';
 import 'package:tfgapp/src/pages/detailsTVScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
+import 'package:tfgapp/src/pages/userProfile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -67,7 +68,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     PageRouteBuilder(
                         pageBuilder: (_, __, ___) => SearchScreen()));
               } else if (_paginaActual == 2) {
-              } else {}
+              } else if (_paginaActual == 4) {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => UserProfileScreen()));
+              }
             });
           },
           backgroundColor: Color(0xFF151C26),

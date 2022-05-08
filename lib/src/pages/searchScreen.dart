@@ -22,6 +22,7 @@ import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/providers.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:tfgapp/src/pages/userProfile.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -143,7 +144,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       context,
                       PageRouteBuilder(
                           pageBuilder: (_, __, ___) => HomeScreen()));
-                } else if (_paginaActual == 1) {}
+                } else if (_paginaActual == 4) {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => UserProfileScreen()));
+                } else if (_paginaActual == 0) {}
               });
             },
             backgroundColor: Color(0xFF151C26),
@@ -925,6 +931,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               value.end.toInt().toString();
                                           if (valueEnd == "180") valueEnd = "";
                                           urlRuntime =
+                                              // ignore: unnecessary_brace_in_string_interps
                                               "with_runtime.gte=${value.start.toInt().toString()}&with_runtime.lte=${valueEnd}";
                                           valuesRuntime = value;
                                           labelsRuntime = RangeLabels(
@@ -957,6 +964,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               value.end.toInt().toString();
                                           if (valueEnd == "90") valueEnd = "";
                                           urlRuntimeEpisodeTV =
+                                              // ignore: unnecessary_brace_in_string_interps
                                               "with_runtime.gte=${value.start.toInt().toString()}&with_runtime.lte=${valueEnd}";
                                           valuesRuntimeEpisodeTV = value;
                                           labelsRuntimeEpisodeTV = RangeLabels(
@@ -1187,6 +1195,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     var valueEnd = value.end.toInt().toString();
                                     if (valueEnd == "5000") valueEnd = "";
                                     urlVoteCount =
+                                        // ignore: unnecessary_brace_in_string_interps
                                         "vote_count.gte=${value.start.toInt().toString()}&vote_count.lte=${valueEnd}";
                                     valuesVoteCount = value;
                                     labelsVoteCount = RangeLabels(
@@ -1305,6 +1314,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               Container(
                                 height: 40.0,
                                 margin: EdgeInsets.all(10),
+                                // ignore: deprecated_member_use
                                 child: RaisedButton(
                                   onPressed: () {
                                     print(urlProviders);
