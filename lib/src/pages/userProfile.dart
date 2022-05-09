@@ -20,6 +20,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String nickname = '';
   String email = '';
   String about = '';
+  String profileImage = '';
   List followers = [];
   List followings = [];
   //String photoUrl = '';
@@ -30,8 +31,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       SecureStorage.readSecureStorage('App_UserID').then((id) {
         var url =
             Uri.parse('https://api-danielrodriguez.herokuapp.com/users/' + id);
+        print(url.toString());
         http.get(url).then((res) {
-          print(res.statusCode);
+          print("CODEEEE ${res.statusCode}");
           if (res.statusCode == 200) {
             Map<String, dynamic> body = jsonDecode(res.body);
             Map<String, dynamic> user = body["user"];
@@ -41,8 +43,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               nickname = user["nickname"];
               email = user["email"];
               about = user["about"];
+              profileImage = user["profileImage"];
               followers = user["followers"];
               followings = user["followings"];
+              print(profileImage);
               print(nickname);
               print(followers.length);
               //photoUrl = user["profileImage"];
@@ -259,26 +263,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       SafeArea(
           child: Column(children: [
         Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(
-                      "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg"),
-                  fit: BoxFit.cover)),
           child: Container(
             width: double.infinity,
             height: 200,
             child: Container(
               alignment: Alignment(0.0, 2.5),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://images.pexels.com/photos/11760521/pexels-photo-11760521.png?cs=srgb&dl=pexels-daniel-rodr%C3%ADguez-11760521.jpg&fm=jpg"),
-                radius: 60.0,
+                backgroundImage: NetworkImage(profileImage != ''
+                    ? profileImage
+                    :
+                    //Imagen de prueba, se colocará la imagen del usuario
+                    "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"),
+                radius: 90.0,
               ),
             ),
           ),
         ),
         SizedBox(
-          height: 65,
+          height: 35,
         ),
         Container(
           alignment: Alignment.center,
@@ -349,7 +351,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditProfileScreen(
-                              name, lastname, nickname, email, about),
+                            name,
+                            lastname,
+                            nickname,
+                            email,
+                            about,
+                            profileImage,
+                          ),
                         ));
                   },
                   shape: RoundedRectangleBorder(

@@ -1,21 +1,27 @@
+import 'dart:io';
 import 'dart:ui';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:tfgapp/src/pages/loginScreen.dart';
+import 'package:tfgapp/src/pages/userProfile.dart';
+import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/storage/secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 // ignore: must_be_immutable
 class EditProfileScreen extends StatefulWidget {
-  String name, lastname, nickname, email, about;
-  EditProfileScreen(
-      this.name, this.lastname, this.nickname, this.email, this.about);
+  String name, lastname, nickname, email, about, profileImage;
+  EditProfileScreen(this.name, this.lastname, this.nickname, this.email,
+      this.about, this.profileImage);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  bool showPassword = false;
+  bool changeProfile = false;
+
+  File profileImage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,53 +136,81 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SizedBox(
               height: 20,
             ),
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    width: 130,
-                    height: 130,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor),
-                        boxShadow: [
-                          BoxShadow(
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.1),
-                              offset: Offset(0, 10))
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250",
-                            ))),
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Color(0xFFF4C10F)),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
+            Stack(
+              children: [
+                Container(
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        GestureDetector(
+                          //PROFILE IMAGE
+                          onTap: () async {
+                            try {
+                              print("profile");
+                              final profileImage = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              if (profileImage == null) return;
+                              final imageTemporary = File(profileImage.path);
+                              setState(() {
+                                this.profileImage = imageTemporary;
+                                changeProfile = true;
+                              });
+                            } on PlatformException catch (e) {
+                              print("Failed to pick image: $e");
+                            }
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0, 10))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: changeProfile
+                                        ? FileImage(profileImage)
+                                        : NetworkImage(
+                                            widget.profileImage,
+                                          ))),
+                          ),
                         ),
-                      )),
-                ],
-              ),
+                        Positioned(
+                            bottom: 40,
+                            right: 20,
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                  ),
+                                  color: Color(0xFFF4C10F)),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
-              height: 35,
+              height: 20,
             ),
             buildTextField("Nombre", "${widget.name}"),
             buildTextField("Apellido", "${widget.lastname}"),
@@ -312,37 +346,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _submitEliminarCuenta(BuildContext context) {
-    SecureStorage.readSecureStorage('App_UserID').then((id) {
-      var url =
-          Uri.parse("https://api-danielrodriguez.herokuapp.com/users/$id");
-      http.delete(url).then((res) {
-        print(res.statusCode);
-        print(url.toString());
-
-        if (res.statusCode != 400 && res.statusCode != 404) {
-          print("delete");
-          Navigator.of(context).pop();
-          print("delete1");
-          Navigator.push(
-            context,
-            PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()),
-          );
-          SecureStorage.deleteSecureStorage().then((val) {
-            Navigator.push(
-              context,
-              PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()),
-            );
-          });
-        } else {
-          print("MAAAL${res.statusCode}");
-        }
-      });
+  Future<void> _submitEliminarCuenta(BuildContext context) async {
+    await APIUserService().deleteUser();
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()),
+    );
+    SecureStorage.deleteSecureStorage().then((val) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()),
+      );
     });
   }
 
   void _submitCerrarSesion(BuildContext context) {
     Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      PageRouteBuilder(pageBuilder: (_, __, ___) => LoginPage()),
+    );
     SecureStorage.deleteSecureStorage().then((val) {
       Navigator.push(
         context,
@@ -353,22 +377,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _submitProfile(String name, String lastname, String nickname,
       String email, String about) async {
-    String userId = await SecureStorage.readSecureStorage('App_UserID');
-
-    var uri =
-        Uri.parse("https://api-danielrodriguez.herokuapp.com/users/$userId");
-    await http.patch(
-      uri,
-      body: {
-        "new_name": name,
-        "new_lastname": lastname,
-        "new_nickname": nickname,
-        "new_email": email,
-        "new_about": about
-      },
-    ).then((value) => print(value.body));
-
-    Navigator.pop(context);
+    Future<String> status = APIUserService()
+        .updateUser(name, lastname, nickname, email, about, profileImage);
+    print(status);
+    Navigator.push(context,
+        PageRouteBuilder(pageBuilder: (_, __, ___) => UserProfileScreen()));
   }
 
   Widget buildTextField(String labelText, String placeholder) {
