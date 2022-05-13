@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:tfgapp/src/storage/secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class APIUserService {
+  final Dio _dio = Dio();
   final String myUrl = "https://api-danielrodriguez.herokuapp.com";
 
   Future<String> updateUser(String name, String lastname, String nickname,
@@ -46,5 +48,41 @@ class APIUserService {
         }
       });
     });
+  }
+
+  Future<double> getRatingByUser(int movieId) async {
+    try {
+      double rating = 0;
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/getRatingByUser/$id/$movieId';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        if (response.data.toString() == "[]") {
+          rating = 0;
+        } else
+          rating = response.data[0]["rating"].toDouble();
+        print(rating);
+      });
+      return rating;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<void> addRating(int movieId, double rating) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/addRating/$id';
+        print('Api Call: $url');
+
+        final response = await _dio
+            .post(url, data: {'rating': rating, 'idFilmOrShow': movieId});
+        return response;
+      });
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
   }
 }
