@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/tv.dart';
+import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/service/TMDB-Api_service.dart';
 
 class DetailsTVScreen extends StatelessWidget {
@@ -95,7 +97,7 @@ class DetailsTVScreen extends StatelessWidget {
                             ),
 
                             //IMDB
-                            Column(
+                            /* Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -125,10 +127,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),
+                            ),*/
 
                             //METACRITIC
-                            Column(
+                            /*Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -160,10 +162,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),
+                            ),*/
 
                             //FILMAFFINITY
-                            Column(
+                            /*Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -195,10 +197,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),
+                            ),*/
 
                             //ROTTEN TOMATOES
-                            Column(
+                            /*Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -230,7 +232,7 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            )
+                            )*/
                           ],
                         ),
                       ),
@@ -266,6 +268,21 @@ class DetailsTVScreen extends StatelessWidget {
                                   : Text(''),
                               SizedBox(width: 10),
                               FutureBuilder(
+                                  future: episodeRuntime(tvid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text("${snapshot.data}",
+                                          style:
+                                              TextStyle(color: Colors.white54));
+                                    }
+                                    return Container();
+                                  }),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: <Widget>[
+                              FutureBuilder(
                                   future: numberOfSeasons(tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
@@ -278,17 +295,6 @@ class DetailsTVScreen extends StatelessWidget {
                               SizedBox(width: 10),
                               FutureBuilder(
                                   future: numberOfEpisodes(tvid),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text("${snapshot.data}",
-                                          style:
-                                              TextStyle(color: Colors.white54));
-                                    }
-                                    return Container();
-                                  }),
-                              SizedBox(width: 10),
-                              FutureBuilder(
-                                  future: episodeRuntime(tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -313,22 +319,125 @@ class DetailsTVScreen extends StatelessWidget {
                                     return Container();
                                   }),
                             ],
-                          )
+                          ),
+                          SizedBox(height: 15),
+                          Row(children: [
+                            FutureBuilder(
+                                future: getRatingByUser(int.parse(tvid)),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return RatingBar.builder(
+                                        itemSize: 27,
+                                        initialRating: snapshot.data,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        unratedColor: Colors.grey,
+                                        itemCount: 5,
+                                        itemPadding: EdgeInsets.all(1.0),
+                                        itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.yellow),
+                                        onRatingUpdate: (rating) {
+                                          print(rating);
+                                          addRating(int.parse(tvid), rating);
+                                        });
+                                  }
+                                  print("NO DATA");
+                                  return Container();
+                                })
+                          ]),
+                          SizedBox(height: 10),
+
+                          // ignore: deprecated_member_use
+                          RaisedButton(
+                            onPressed: () {},
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(80.0)),
+                            padding: EdgeInsets.all(0.0),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF7a7a7a),
+                                      Color(0xffd6d6d6)
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                    maxWidth: 150.0, maxHeight: 40.0),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Añadir a watchlist",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          // ignore: deprecated_member_use
+                          RaisedButton(
+                            onPressed: () {},
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(80.0)),
+                            padding: EdgeInsets.all(0.0),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF7a7a7a),
+                                      Color(0xffd6d6d6)
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                    maxWidth: 150.0, maxHeight: 40.0),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Recomendar",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: FloatingActionButton(
-                          backgroundColor: Color(0xFFFFD600),
-                          onPressed: () {},
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 28,
-                          )),
-                    )
+                    ClipRRect(
+                      child: FutureBuilder(
+                          future: posterTV(tvid),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return CachedNetworkImage(
+                                imageUrl:
+                                    'https://image.tmdb.org/t/p/original/${snapshot.data}',
+                                height: 250,
+                                width: 150,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) => Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/img_not_found.jpg'),
+                                ))),
+                              );
+                            } else
+                              return Container();
+                          }),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -563,6 +672,17 @@ class DetailsTVScreen extends StatelessWidget {
         ));
   }
 
+  Future<double> getRatingByUser(int idMovie) async {
+    double rating = await APIUserService().getRatingByUser(idMovie);
+    print("dfsdfsdf $rating");
+    return rating;
+  }
+
+  Future<void> addRating(int idMovie, double rating) async {
+    await APIUserService().addRating(idMovie, rating);
+    print("ADD RATING");
+  }
+
   Future<TV> getTV(String idTV) async {
     TV tv = await TMDBApiService().getTV(idTV.toString());
     return tv;
@@ -613,6 +733,12 @@ class DetailsTVScreen extends StatelessWidget {
     return ('$numberOfEpisodes episodios');
   }
 
+  Future<String> posterTV(String idTV) async {
+    String posterPath = await TMDBApiService().posterTV(tvid);
+    print(posterPath);
+    return posterPath;
+  }
+
   Future<String> episodeRuntime(String idTV) async {
     String episodeRuntime = await TMDBApiService().episodeRuntime(tvid);
     return ('$episodeRuntime min');
@@ -621,15 +747,15 @@ class DetailsTVScreen extends StatelessWidget {
   Future<String> statusTV(String idTV) async {
     String status = await TMDBApiService().statusTV(tvid);
     if (status == "Returning Series")
-      return ('La serie se encuentra en fase de retorno.');
+      return ('Serie en retorno.');
     else if (status == "In Production")
-      return ('La serie se encuentra en producción.');
+      return ('Serie en producción.');
     else if (status == "Ended")
-      return ('La serie se encuentra finalizada.');
+      return ('Serie finalizada.');
     else if (status == "Canceled")
-      return ('La serie se encuentra cancelada.');
+      return ('Serie cancelada.');
     else
-      return ('La serie está en fase piloto.');
+      return ('En fase piloto.');
   }
 
   Future<String> voteTVIMDB(String idTV) async {

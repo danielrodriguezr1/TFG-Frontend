@@ -192,6 +192,21 @@ class TMDBApiService {
     }
   }
 
+  Future<String> posterTV(String id) async {
+    try {
+      final url = '$myUrl/getTV/$id';
+      //final url = '$baseUrl/tv/$id?$apiKey&language=es-ES';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      String status = response.data['poster_path'].toString();
+      //print(movieRuntime);
+      return status;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
   Future<List<dynamic>> genresFilmById(String id) async {
     try {
       final url = '$myUrl/getMovie/$id';

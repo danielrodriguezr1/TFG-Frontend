@@ -93,7 +93,7 @@ class DetailsMovieScreen extends StatelessWidget {
                             ),
 
                             //IMDB
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -123,10 +123,10 @@ class DetailsMovieScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //METACRITIC
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -158,10 +158,10 @@ class DetailsMovieScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //FILMAFFINITY
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -194,10 +194,10 @@ class DetailsMovieScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //ROTTEN TOMATOES
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -230,7 +230,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            )*/
+                            )
                           ],
                         ),
                       ),
