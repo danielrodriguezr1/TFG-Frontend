@@ -20,6 +20,7 @@ import 'package:tfgapp/src/pages/genresMovie.dart';
 import 'package:tfgapp/src/pages/genresTV.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/providers.dart';
+import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tfgapp/src/pages/userProfile.dart';
@@ -139,7 +140,12 @@ class _SearchScreenState extends State<SearchScreen> {
             onTap: (index) {
               setState(() {
                 _paginaActual = index;
-                if (_paginaActual == 2) {
+                if (_paginaActual == 1) {
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => RecommendationScreen()));
+                } else if (_paginaActual == 2) {
                   Navigator.push(
                       context,
                       PageRouteBuilder(

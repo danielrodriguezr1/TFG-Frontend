@@ -86,7 +86,7 @@ class DetailsTVScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.black),
                                   children: [
                                     TextSpan(
-                                        text: "$voteAverage/",
+                                        text: "${voteAverage.substring(0, 3)}/",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600)),
@@ -97,7 +97,7 @@ class DetailsTVScreen extends StatelessWidget {
                             ),
 
                             //IMDB
-                            /* Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -127,10 +127,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //METACRITIC
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -162,10 +162,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //FILMAFFINITY
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -197,10 +197,10 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            ),*/
+                            ),
 
                             //ROTTEN TOMATOES
-                            /*Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -232,7 +232,7 @@ class DetailsTVScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            )*/
+                            )
                           ],
                         ),
                       ),
@@ -679,7 +679,7 @@ class DetailsTVScreen extends StatelessWidget {
   }
 
   Future<void> addRating(int idMovie, double rating) async {
-    await APIUserService().addRating(idMovie, rating);
+    await APIUserService().addRating(idMovie, rating, 1);
     print("ADD RATING");
   }
 

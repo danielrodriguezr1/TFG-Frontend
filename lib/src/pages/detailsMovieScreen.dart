@@ -629,7 +629,7 @@ class DetailsMovieScreen extends StatelessWidget {
   }
 
   Future<void> addRating(int idMovie, double rating) async {
-    await APIUserService().addRating(idMovie, rating);
+    await APIUserService().addRating(idMovie, rating, 0);
     print("ADD RATING");
   }
 

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:tfgapp/src/models/movie.dart';
+import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/storage/secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -6,6 +8,40 @@ import 'package:dio/dio.dart';
 class APIUserService {
   final Dio _dio = Dio();
   final String myUrl = "https://api-danielrodriguez.herokuapp.com";
+
+  Future<List<Movie>> getRecommendations() async {
+    try {
+      List<Movie> movieList;
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/getRecommendations/$id/0';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var movies = response.data as List;
+        movieList = movies.map((m) => Movie.fromJson(m)).toList();
+      });
+      return movieList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<TV>> getRecommendationsTV() async {
+    try {
+      List<TV> tvList;
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/getRecommendations/$id/1';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var tv = response.data as List;
+        tvList = tv.map((m) => TV.fromJson(m)).toList();
+      });
+      return tvList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 
   Future<String> updateUser(String name, String lastname, String nickname,
       String email, String about, File profileImage) async {
@@ -70,14 +106,14 @@ class APIUserService {
     }
   }
 
-  Future<void> addRating(int movieId, double rating) async {
+  Future<void> addRating(int movieId, double rating, int type) async {
     try {
       await SecureStorage.readSecureStorage('App_UserID').then((id) async {
         final url = '$myUrl/addRating/$id';
         print('Api Call: $url');
 
-        final response = await _dio
-            .post(url, data: {'rating': rating, 'idFilmOrShow': movieId});
+        final response = await _dio.post(url,
+            data: {'rating': rating, 'idFilmOrShow': movieId, 'type': type});
         return response;
       });
     } catch (error, stacktrace) {

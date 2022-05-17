@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tfgapp/src/pages/editProfile.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
+import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
 import 'package:tfgapp/src/storage/secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -130,6 +131,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   context,
                   PageRouteBuilder(
                       pageBuilder: (_, __, ___) => SearchScreen()));
+            } else if (_paginaActual == 1) {
+              Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => RecommendationScreen()));
             } else if (_paginaActual == 2) {
               Navigator.push(context,
                   PageRouteBuilder(pageBuilder: (_, __, ___) => HomeScreen()));

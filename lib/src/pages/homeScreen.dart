@@ -18,6 +18,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/pages/detailsMovieScreen.dart';
 import 'package:tfgapp/src/pages/detailsTVScreen.dart';
+import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
 import 'package:tfgapp/src/pages/userProfile.dart';
 
@@ -67,6 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     PageRouteBuilder(
                         pageBuilder: (_, __, ___) => SearchScreen()));
+              } else if (_paginaActual == 1) {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => RecommendationScreen()));
               } else if (_paginaActual == 2) {
               } else if (_paginaActual == 4) {
                 Navigator.push(
