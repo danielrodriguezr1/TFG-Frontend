@@ -15,11 +15,11 @@ import 'package:tfgapp/src/cubit/search_results_cubit.dart';
 import 'package:tfgapp/src/models/country.dart';
 import 'package:tfgapp/src/models/genre.dart';
 import 'package:tfgapp/src/models/provider.dart';
-import 'package:tfgapp/src/pages/countries.dart';
-import 'package:tfgapp/src/pages/genresMovie.dart';
-import 'package:tfgapp/src/pages/genresTV.dart';
+import 'package:tfgapp/src/utils/countries.dart';
+import 'package:tfgapp/src/utils/genresMovie.dart';
+import 'package:tfgapp/src/utils/genresTV.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
-import 'package:tfgapp/src/pages/providers.dart';
+import 'package:tfgapp/src/utils/providers.dart';
 import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchResult.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -805,8 +805,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                     itemsTextStyle:
                                         TextStyle(color: Colors.white70),
                                     items: _itemsProviders,
-                                    confirmText: Text("Aceptar"),
-                                    cancelText: Text("Cancelar"),
+                                    confirmText: Text("Aceptar",
+                                        style: TextStyle(
+                                            color: Color(0xFFF4C10F))),
+                                    cancelText: Text("Cancelar",
+                                        style: TextStyle(
+                                            color: Color(0xFFF4C10F))),
                                     title: Text("Plataformas",
                                         style: TextStyle(color: Colors.white)),
                                     selectedColor: Colors.white70,
@@ -1016,8 +1020,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                   itemsTextStyle:
                                       TextStyle(color: Colors.white70),
                                   items: _itemsCountries,
-                                  confirmText: Text("Aceptar"),
-                                  cancelText: Text("Cancelar"),
+                                  confirmText: Text("Aceptar",
+                                      style:
+                                          TextStyle(color: Color(0xFFF4C10F))),
+                                  cancelText: Text("Cancelar",
+                                      style:
+                                          TextStyle(color: Color(0xFFF4C10F))),
                                   title: Text("Países",
                                       style: TextStyle(color: Colors.white)),
                                   selectedColor: Colors.white70,
@@ -1103,8 +1111,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                   items: (isMovie == true)
                                       ? _itemsGenres
                                       : _itemsGenresTV,
-                                  confirmText: Text("Aceptar"),
-                                  cancelText: Text("Cancelar"),
+                                  confirmText: Text("Aceptar",
+                                      style:
+                                          TextStyle(color: Color(0xFFF4C10F))),
+                                  cancelText: Text("Cancelar",
+                                      style:
+                                          TextStyle(color: Color(0xFFF4C10F))),
                                   title: Text("Géneros",
                                       style: TextStyle(color: Colors.white)),
                                   selectedColor: Colors.white70,
@@ -1281,9 +1293,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                       initialLabelIndex: initialIndex2,
                                       totalSwitches: 3,
                                       labels: [
+                                        'No importa',
                                         'En emisión',
                                         'Finlizada',
-                                        'No importa'
                                       ],
                                       customTextStyles: [
                                         TextStyle(
@@ -1300,9 +1312,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                         setState(() {
                                           initialIndex2 = index;
                                           if (index == 0)
-                                            urlStatusTV = "with_status=0";
+                                            urlStatusTV = "with_status=";
                                           else if (index == 1)
-                                            urlStatusTV = "with_status=2";
+                                            urlStatusTV = "with_status=0";
+                                          else if (index == 2)
+                                            urlStatusTV = "with_status=3";
                                         });
                                       },
                                     )

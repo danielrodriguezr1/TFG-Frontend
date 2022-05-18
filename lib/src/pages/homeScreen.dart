@@ -533,6 +533,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Container(
                                   width: 180,
+                                  height: 12,
                                   child: Text(
                                     tv.name.toUpperCase(),
                                     style: TextStyle(

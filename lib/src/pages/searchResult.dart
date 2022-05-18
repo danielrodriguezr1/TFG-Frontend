@@ -436,12 +436,15 @@ class _SearchResultsState extends State<SearchResults> {
                             onTap: () => Navigator.of(context).pop(),
                           ),
                           widget.buttonsBool == true
-                              ? Text(
-                                  'Resultados para "${widget.query}"',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                              ? Flexible(
+                                  child: Text(
+                                    'Resultados para "${widget.query}"',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 )
                               : Container(),

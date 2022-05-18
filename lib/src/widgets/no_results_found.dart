@@ -179,17 +179,13 @@ class NoResultsFound extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                "404 not found",
-                //style: heading.copyWith(color: Colors.white.withOpacity(.9)),
-              ),
               const SizedBox(
                 height: 10,
               ),
               Text(
-                "We didn't found anything related with your query, please search with little accurate word.",
+                "No encontramos nada relacionado con su consulta, pruebe de nuevo con otra búsqueda.",
                 textAlign: TextAlign.center,
-                //style: normalText.copyWith(color: Colors.white.withOpacity(.9)),
+                style: TextStyle(color: Colors.white.withOpacity(.8)),
               ),
             ],
           ),

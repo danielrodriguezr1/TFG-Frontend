@@ -61,7 +61,7 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
         state.copyWith(
           movies: state.movies,
           moviePage: state.moviePage + 1,
-          moviesFull: movies[1] != state.moviePage,
+          moviesFull: 1 != state.moviePage,
         ),
       );
     } else {
@@ -79,6 +79,7 @@ class SearchResultsCubit extends Cubit<SearchResultsState> {
           shows: state.shows,
           tvPage: state.tvPage + 1,
           tvFull: shows[1] != state.tvPage,
+          //tvFull: 1 != state.tvPage
         ),
       );
     } else {
