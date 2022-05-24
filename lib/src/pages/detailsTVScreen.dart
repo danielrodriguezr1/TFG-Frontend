@@ -7,7 +7,7 @@ import 'package:tfgapp/src/models/tv.dart';
 import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/service/TMDB-Api_service.dart';
 
-class DetailsTVScreen extends StatelessWidget {
+class DetailsTVScreen extends StatefulWidget {
   final String tvid, name, year, backdropPath, voteAverage; /*, overview*/
   const DetailsTVScreen({
     Key key,
@@ -19,6 +19,11 @@ class DetailsTVScreen extends StatelessWidget {
     //this.overview,
   }) : super(key: key);
 
+  @override
+  _DetailsTVScreenState createState() => _DetailsTVScreenState();
+}
+
+class _DetailsTVScreenState extends State<DetailsTVScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +41,7 @@ class DetailsTVScreen extends StatelessWidget {
                     ClipRRect(
                       child: CachedNetworkImage(
                         imageUrl:
-                            'https://image.tmdb.org/t/p/original/$backdropPath',
+                            'https://image.tmdb.org/t/p/original/${widget.backdropPath}',
                         height: MediaQuery.of(context).size.height * 0.4 - 50,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
@@ -86,7 +91,8 @@ class DetailsTVScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.black),
                                   children: [
                                     TextSpan(
-                                        text: "${voteAverage.substring(0, 3)}/",
+                                        text:
+                                            "${widget.voteAverage.substring(0, 3)}/",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600)),
@@ -107,7 +113,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         width: 50, height: 50)),
                                 SizedBox(height: 5),
                                 FutureBuilder(
-                                    future: voteTVIMDB(tvid),
+                                    future: voteTVIMDB(widget.tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -142,7 +148,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         height: 50)),
                                 SizedBox(height: 5),
                                 FutureBuilder(
-                                    future: voteTVMetacritic(tvid),
+                                    future: voteTVMetacritic(widget.tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -177,7 +183,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         height: 50)),
                                 SizedBox(height: 5),
                                 FutureBuilder(
-                                    future: voteTVFilmAffinity(tvid),
+                                    future: voteTVFilmAffinity(widget.tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -212,7 +218,7 @@ class DetailsTVScreen extends StatelessWidget {
                                         height: 50)),
                                 SizedBox(height: 5),
                                 FutureBuilder(
-                                    future: voteTVRottenTomatoes(tvid),
+                                    future: voteTVRottenTomatoes(widget.tvid),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         return RichText(
@@ -252,7 +258,7 @@ class DetailsTVScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(name,
+                          Text(widget.name,
                               style: TextStyle(
                                 color: Color(0xEAFFFFFF),
                                 fontSize: 24,
@@ -260,15 +266,15 @@ class DetailsTVScreen extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: <Widget>[
-                              (year != '')
+                              (widget.year != '')
                                   ? Text(
-                                      '${year.substring(0, 4)}',
+                                      '${widget.year.substring(0, 4)}',
                                       style: TextStyle(color: Colors.white54),
                                     )
                                   : Text(''),
                               SizedBox(width: 10),
                               FutureBuilder(
-                                  future: episodeRuntime(tvid),
+                                  future: episodeRuntime(widget.tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -283,7 +289,7 @@ class DetailsTVScreen extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               FutureBuilder(
-                                  future: numberOfSeasons(tvid),
+                                  future: numberOfSeasons(widget.tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -294,7 +300,7 @@ class DetailsTVScreen extends StatelessWidget {
                                   }),
                               SizedBox(width: 10),
                               FutureBuilder(
-                                  future: numberOfEpisodes(tvid),
+                                  future: numberOfEpisodes(widget.tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -309,7 +315,7 @@ class DetailsTVScreen extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               FutureBuilder(
-                                  future: statusTV(tvid),
+                                  future: statusTV(widget.tvid),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -323,7 +329,7 @@ class DetailsTVScreen extends StatelessWidget {
                           SizedBox(height: 15),
                           Row(children: [
                             FutureBuilder(
-                                future: getRatingByUser(int.parse(tvid)),
+                                future: getRatingByUser(int.parse(widget.tvid)),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     return RatingBar.builder(
@@ -340,7 +346,8 @@ class DetailsTVScreen extends StatelessWidget {
                                             color: Colors.yellow),
                                         onRatingUpdate: (rating) {
                                           print(rating);
-                                          addRating(int.parse(tvid), rating);
+                                          addRating(
+                                              int.parse(widget.tvid), rating);
                                         });
                                   }
                                   print("NO DATA");
@@ -348,37 +355,97 @@ class DetailsTVScreen extends StatelessWidget {
                                 })
                           ]),
                           SizedBox(height: 10),
+                          Row(children: [
+                            FutureBuilder(
+                                future:
+                                    existsInWatchlist(int.parse(widget.tvid)),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    print(snapshot.data);
+                                    if (snapshot.data == "404") {
+                                      // ignore: deprecated_member_use
+                                      return RaisedButton(
+                                        onPressed: () {
+                                          addToWatchlist(
+                                              int.parse(widget.tvid));
+                                          setState(() {});
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(80.0)),
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFFF4C10F),
+                                                  Color(0xFFF4C10F)
+                                                ],
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0)),
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: 150.0,
+                                                maxHeight: 40.0),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Añadir a watchlist",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      // ignore: deprecated_member_use
+                                      return RaisedButton(
+                                        onPressed: () {
+                                          deleteFromWatchlistTV(
+                                              int.parse(widget.tvid));
+                                          setState(() {});
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(80.0)),
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFF7a7a7a),
+                                                  Color(0xffd6d6d6)
+                                                ],
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0)),
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: 150.0,
+                                                maxHeight: 40.0),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Eliminar de watchlist",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else
+                                    return Container();
+                                })
+                          ]),
 
-                          // ignore: deprecated_member_use
-                          RaisedButton(
-                            onPressed: () {},
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(80.0)),
-                            padding: EdgeInsets.all(0.0),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFF7a7a7a),
-                                      Color(0xffd6d6d6)
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              child: Container(
-                                constraints: BoxConstraints(
-                                    maxWidth: 150.0, maxHeight: 40.0),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Añadir a watchlist",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                              ),
-                            ),
-                          ),
                           SizedBox(height: 10),
                           // ignore: deprecated_member_use
                           RaisedButton(
@@ -415,7 +482,7 @@ class DetailsTVScreen extends StatelessWidget {
                     ),
                     ClipRRect(
                       child: FutureBuilder(
-                          future: posterTV(tvid),
+                          future: posterTV(widget.tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return CachedNetworkImage(
@@ -448,7 +515,7 @@ class DetailsTVScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 36,
                   child: FutureBuilder(
-                      future: genresById(tvid),
+                      future: genresById(widget.tvid),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<dynamic> genres = snapshot.data;
@@ -488,7 +555,7 @@ class DetailsTVScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: FutureBuilder(
-                    future: overviewByID(tvid),
+                    future: overviewByID(widget.tvid),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Text("${snapshot.data}",
@@ -517,7 +584,7 @@ class DetailsTVScreen extends StatelessWidget {
                         Container(
                           height: 160,
                           child: FutureBuilder(
-                              future: crew(tvid),
+                              future: crew(widget.tvid),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<dynamic> crew = snapshot.data;
@@ -554,7 +621,7 @@ class DetailsTVScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: cast(tvid),
+                          future: cast(widget.tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<dynamic> cast = snapshot.data;
@@ -597,7 +664,7 @@ class DetailsTVScreen extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       child: FutureBuilder(
-                          future: platformFlatrateTV(tvid),
+                          future: platformFlatrateTV(widget.tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -637,7 +704,7 @@ class DetailsTVScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: platformBuyTV(tvid),
+                          future: platformBuyTV(widget.tvid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -672,6 +739,22 @@ class DetailsTVScreen extends StatelessWidget {
         ));
   }
 
+  Future<void> addToWatchlist(int idMovie) async {
+    await APIUserService().addToWatchlistTV(idMovie);
+    print("ADDED TO WATCHLIST");
+  }
+
+  Future<void> deleteFromWatchlistTV(int idMovie) async {
+    await APIUserService().deleteFromWatchlistTV(idMovie);
+    print("REMOVED FROM WATCHLIST");
+  }
+
+  Future<String> existsInWatchlist(int idShow) async {
+    String code = await APIUserService().existsInWatchlist(idShow);
+    print("JEJE $code");
+    return code;
+  }
+
   Future<double> getRatingByUser(int idMovie) async {
     double rating = await APIUserService().getRatingByUser(idMovie);
     print("dfsdfsdf $rating");
@@ -689,12 +772,12 @@ class DetailsTVScreen extends StatelessWidget {
   }
 
   Future<List<dynamic>> genresById(String idTV) async {
-    List<dynamic> genres = await TMDBApiService().genresTVById(tvid);
+    List<dynamic> genres = await TMDBApiService().genresTVById(widget.tvid);
     return genres;
   }
 
   Future<List<dynamic>> crew(String idTV) async {
-    List<dynamic> cast = await TMDBApiService().crewTV(tvid);
+    List<dynamic> cast = await TMDBApiService().crewTV(widget.tvid);
     print(cast);
     //cast.sort((a, b) => a["job"].compareTo(b["job"]));
 
@@ -702,50 +785,51 @@ class DetailsTVScreen extends StatelessWidget {
   }
 
   Future<List<dynamic>> cast(String idTV) async {
-    List<dynamic> cast = await TMDBApiService().castTV(tvid);
+    List<dynamic> cast = await TMDBApiService().castTV(widget.tvid);
     return cast;
   }
 
   Future<List<dynamic>> platformBuyTV(String idTV) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformBuyTV(tvid.toString());
+        await TMDBApiService().platformBuyTV(widget.tvid.toString());
     return platforms;
   }
 
   Future<List<dynamic>> platformFlatrateTV(String idTV) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformFlatrateTV(tvid.toString());
+        await TMDBApiService().platformFlatrateTV(widget.tvid.toString());
     return platforms;
   }
 
   Future<String> overviewByID(String idTV) async {
-    String overview = await TMDBApiService().overvieyTVById(tvid);
+    String overview = await TMDBApiService().overvieyTVById(widget.tvid);
     return overview;
   }
 
   Future<String> numberOfSeasons(String idTV) async {
-    String numberSeasons = await TMDBApiService().numberOfSeasons(tvid);
+    String numberSeasons = await TMDBApiService().numberOfSeasons(widget.tvid);
     return ('$numberSeasons temporadas');
   }
 
   Future<String> numberOfEpisodes(String idTV) async {
-    String numberOfEpisodes = await TMDBApiService().numberOfEpisodes(tvid);
+    String numberOfEpisodes =
+        await TMDBApiService().numberOfEpisodes(widget.tvid);
     return ('$numberOfEpisodes episodios');
   }
 
   Future<String> posterTV(String idTV) async {
-    String posterPath = await TMDBApiService().posterTV(tvid);
+    String posterPath = await TMDBApiService().posterTV(widget.tvid);
     print(posterPath);
     return posterPath;
   }
 
   Future<String> episodeRuntime(String idTV) async {
-    String episodeRuntime = await TMDBApiService().episodeRuntime(tvid);
+    String episodeRuntime = await TMDBApiService().episodeRuntime(widget.tvid);
     return ('$episodeRuntime min');
   }
 
   Future<String> statusTV(String idTV) async {
-    String status = await TMDBApiService().statusTV(tvid);
+    String status = await TMDBApiService().statusTV(widget.tvid);
     if (status == "Returning Series")
       return ('Serie en retorno.');
     else if (status == "In Production")
@@ -759,24 +843,26 @@ class DetailsTVScreen extends StatelessWidget {
   }
 
   Future<String> voteTVIMDB(String idTV) async {
-    String voteTVIMDB = await TMDBApiService().voteTVIMDB(tvid.toString());
+    String voteTVIMDB =
+        await TMDBApiService().voteTVIMDB(widget.tvid.toString());
     return voteTVIMDB;
   }
 
   Future<String> voteTVMetacritic(String idTV) async {
     String voteTVMetacritic =
-        await TMDBApiService().voteTVMetacritic(tvid.toString());
+        await TMDBApiService().voteTVMetacritic(widget.tvid.toString());
     return voteTVMetacritic;
   }
 
   Future<String> voteTVFilmAffinity(String idTV) async {
-    String voteTVFilmAffinity = await TMDBApiService().voteTVFilmAffinity(tvid);
+    String voteTVFilmAffinity =
+        await TMDBApiService().voteTVFilmAffinity(widget.tvid);
     return voteTVFilmAffinity;
   }
 
   Future<String> voteTVRottenTomatoes(String idTV) async {
     String voteTVRottenTomatoes =
-        await TMDBApiService().voteTVRottenTomatoes(tvid);
+        await TMDBApiService().voteTVRottenTomatoes(widget.tvid);
     return voteTVRottenTomatoes;
   }
 }

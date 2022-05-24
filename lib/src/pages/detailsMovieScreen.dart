@@ -7,15 +7,26 @@ import 'package:tfgapp/src/models/movie.dart';
 import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/service/TMDB-Api_service.dart';
 
-class DetailsMovieScreen extends StatelessWidget {
+class DetailsMovieScreen extends StatefulWidget {
   final Movie movie;
   const DetailsMovieScreen({Key key, this.movie}) : super(key: key);
 
   @override
+  _DetailsMovieScreenState createState() => _DetailsMovieScreenState();
+}
+
+class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //voteIMDB(movie.id.toString());
-    cast(movie.id.toString());
-    platformBuyFilm(movie.id.toString());
+
+    cast(widget.movie.id.toString());
+    platformBuyFilm(widget.movie.id.toString());
 
     return Scaffold(
         backgroundColor: Colors.black87,
@@ -32,7 +43,7 @@ class DetailsMovieScreen extends StatelessWidget {
                     ClipRRect(
                       child: CachedNetworkImage(
                         imageUrl:
-                            'https://image.tmdb.org/t/p/original/${movie.backdropPath}',
+                            'https://image.tmdb.org/t/p/original/${widget.movie.backdropPath}',
                         height: MediaQuery.of(context).size.height * 0.4 - 50,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
@@ -68,7 +79,7 @@ class DetailsMovieScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             //TMDB
-                            Column(
+                            /*Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 10),
@@ -230,7 +241,7 @@ class DetailsMovieScreen extends StatelessWidget {
                                       return Container();
                                     }),
                               ],
-                            )
+                            )*/
                           ],
                         ),
                       ),
@@ -250,7 +261,7 @@ class DetailsMovieScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(movie.title,
+                          Text(widget.movie.title,
                               style: TextStyle(
                                 color: Color(0xEAFFFFFF),
                                 fontSize: 24,
@@ -258,15 +269,16 @@ class DetailsMovieScreen extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: <Widget>[
-                              (movie.releaseDate != '')
+                              (widget.movie.releaseDate != '')
                                   ? Text(
-                                      '${movie.releaseDate.substring(0, 4)}',
+                                      '${widget.movie.releaseDate.substring(0, 4)}',
                                       style: TextStyle(color: Colors.white54),
                                     )
                                   : Text(''),
                               SizedBox(width: 10),
                               FutureBuilder(
-                                  future: runtimeById(movie.id.toString()),
+                                  future:
+                                      runtimeById(widget.movie.id.toString()),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
                                       return Text("${snapshot.data}",
@@ -284,7 +296,7 @@ class DetailsMovieScreen extends StatelessWidget {
                           SizedBox(height: 15),
                           Row(children: [
                             FutureBuilder(
-                                future: getRatingByUser(movie.id),
+                                future: getRatingByUser(widget.movie.id),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     return RatingBar.builder(
@@ -301,44 +313,106 @@ class DetailsMovieScreen extends StatelessWidget {
                                             color: Colors.yellow),
                                         onRatingUpdate: (rating) {
                                           print(rating);
-                                          addRating(movie.id, rating);
+                                          addRating(widget.movie.id, rating);
                                         });
                                   }
-                                  print("NO DATA");
                                   return Container();
                                 })
                           ]),
                           SizedBox(height: 10),
 
                           // ignore: deprecated_member_use
-                          RaisedButton(
-                            onPressed: () {},
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(80.0)),
-                            padding: EdgeInsets.all(0.0),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFF7a7a7a),
-                                      Color(0xffd6d6d6)
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              child: Container(
-                                constraints: BoxConstraints(
-                                    maxWidth: 150.0, maxHeight: 40.0),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Añadir a watchlist",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                              ),
-                            ),
+                          Row(
+                            children: [
+                              FutureBuilder(
+                                  future: existsInWatchlist(widget.movie.id),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      print(snapshot.data);
+                                      if (snapshot.data == "404") {
+                                        // ignore: deprecated_member_use
+                                        return RaisedButton(
+                                          onPressed: () {
+                                            addToWatchlist(widget.movie.id);
+                                            setState(() {});
+                                          },
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(80.0)),
+                                          padding: EdgeInsets.all(0.0),
+                                          child: Ink(
+                                            decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color(0xFFF4C10F),
+                                                    Color(0xFFF4C10F)
+                                                  ],
+                                                  begin: Alignment.centerLeft,
+                                                  end: Alignment.centerRight,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth: 150.0,
+                                                  maxHeight: 40.0),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Añadir a watchlist",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 13),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        // ignore: deprecated_member_use
+                                        return RaisedButton(
+                                          onPressed: () {
+                                            deleteFromWatchlist(
+                                                widget.movie.id);
+                                            setState(() {});
+                                          },
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(80.0)),
+                                          padding: EdgeInsets.all(0.0),
+                                          child: Ink(
+                                            decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color(0xFF7a7a7a),
+                                                    Color(0xffd6d6d6)
+                                                  ],
+                                                  begin: Alignment.centerLeft,
+                                                  end: Alignment.centerRight,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth: 150.0,
+                                                  maxHeight: 40.0),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Eliminar de watchlist",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 13),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container();
+                                  })
+                            ],
                           ),
                           SizedBox(height: 10),
                           // ignore: deprecated_member_use
@@ -377,7 +451,7 @@ class DetailsMovieScreen extends StatelessWidget {
                     ClipRRect(
                       child: CachedNetworkImage(
                         imageUrl:
-                            'https://image.tmdb.org/t/p/original/${movie.poster}',
+                            'https://image.tmdb.org/t/p/original/${widget.movie.poster}',
                         height: 230,
                         width: 150,
                         fit: BoxFit.cover,
@@ -403,7 +477,7 @@ class DetailsMovieScreen extends StatelessWidget {
                 child: SizedBox(
                   height: 36,
                   child: FutureBuilder(
-                      future: genresById(movie.id.toString()),
+                      future: genresById(widget.movie.id.toString()),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<dynamic> genres = snapshot.data;
@@ -442,7 +516,7 @@ class DetailsMovieScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(movie.overview,
+                child: Text(widget.movie.overview,
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                       color: Colors.white70,
@@ -467,7 +541,7 @@ class DetailsMovieScreen extends StatelessWidget {
                         Container(
                           height: 160,
                           child: FutureBuilder(
-                              future: crew(movie.id.toString()),
+                              future: crew(widget.movie.id.toString()),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   List<dynamic> crew = snapshot.data;
@@ -504,7 +578,7 @@ class DetailsMovieScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: cast(movie.id.toString()),
+                          future: cast(widget.movie.id.toString()),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<dynamic> cast = snapshot.data;
@@ -547,7 +621,8 @@ class DetailsMovieScreen extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       child: FutureBuilder(
-                          future: platformFlatrateFilm(movie.id.toString()),
+                          future:
+                              platformFlatrateFilm(widget.movie.id.toString()),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -587,7 +662,7 @@ class DetailsMovieScreen extends StatelessWidget {
                     SizedBox(
                       height: 160,
                       child: FutureBuilder(
-                          future: platformBuyFilm(movie.id.toString()),
+                          future: platformBuyFilm(widget.movie.id.toString()),
                           builder: (context, snapshot) {
                             if (snapshot.hasData && snapshot.data != null) {
                               List<dynamic> platforms = snapshot.data;
@@ -622,6 +697,22 @@ class DetailsMovieScreen extends StatelessWidget {
         ));
   }
 
+  Future<void> addToWatchlist(int idMovie) async {
+    await APIUserService().addToWatchlist(idMovie);
+    print("ADDED TO WATCHLIST");
+  }
+
+  Future<void> deleteFromWatchlist(int idMovie) async {
+    await APIUserService().deleteFromWatchlist(idMovie);
+    print("REMOVED FROM WATCHLIST");
+  }
+
+  Future<String> existsInWatchlist(int idMovie) async {
+    String code = await APIUserService().existsInWatchlist(idMovie);
+    print("JEJE $code");
+    return code;
+  }
+
   Future<double> getRatingByUser(int idMovie) async {
     double rating = await APIUserService().getRatingByUser(idMovie);
     print("dfsdfsdf $rating");
@@ -635,7 +726,7 @@ class DetailsMovieScreen extends StatelessWidget {
 
   Future<String> runtimeById(String idMovie) async {
     String runtime =
-        await TMDBApiService().runtimeFilmById(movie.id.toString());
+        await TMDBApiService().runtimeFilmById(widget.movie.id.toString());
     final int hour = int.parse(runtime) ~/ 60;
     final int minutes = int.parse(runtime) % 60;
     return '${hour.toString()} h ${minutes.toString()} min';
@@ -644,17 +735,19 @@ class DetailsMovieScreen extends StatelessWidget {
 
   Future<List<dynamic>> genresById(String idMovie) async {
     List<dynamic> genres =
-        await TMDBApiService().genresFilmById(movie.id.toString());
+        await TMDBApiService().genresFilmById(widget.movie.id.toString());
     return genres;
   }
 
   Future<List<dynamic>> cast(String idMovie) async {
-    List<dynamic> cast = await TMDBApiService().cast(movie.id.toString());
+    List<dynamic> cast =
+        await TMDBApiService().cast(widget.movie.id.toString());
     return cast;
   }
 
   Future<List<dynamic>> crew(String idMovie) async {
-    List<dynamic> cast = await TMDBApiService().crew(movie.id.toString());
+    List<dynamic> cast =
+        await TMDBApiService().crew(widget.movie.id.toString());
     cast.sort((a, b) => a["job"].compareTo(b["job"]));
 
     return cast;
@@ -662,36 +755,37 @@ class DetailsMovieScreen extends StatelessWidget {
 
   Future<List<dynamic>> platformBuyFilm(String idMovie) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformBuyFilm(movie.id.toString());
+        await TMDBApiService().platformBuyFilm(widget.movie.id.toString());
     return platforms;
   }
 
   Future<List<dynamic>> platformFlatrateFilm(String idMovie) async {
     List<dynamic> platforms =
-        await TMDBApiService().platformFlatrateFilm(movie.id.toString());
+        await TMDBApiService().platformFlatrateFilm(widget.movie.id.toString());
     return platforms;
   }
 
   Future<String> voteIMDB(String idMovie) async {
-    String voteIMDB = await TMDBApiService().voteIMDB(movie.id.toString());
+    String voteIMDB =
+        await TMDBApiService().voteIMDB(widget.movie.id.toString());
     return voteIMDB;
   }
 
   Future<String> voteMetacritic(String idMovie) async {
     String voteMetacritic =
-        await TMDBApiService().voteMetacritic(movie.id.toString());
+        await TMDBApiService().voteMetacritic(widget.movie.id.toString());
     return voteMetacritic;
   }
 
   Future<String> voteFilmAffinity(String idMovie) async {
     String voteFilmAffinity =
-        await TMDBApiService().voteFilmAffinity(movie.id.toString());
+        await TMDBApiService().voteFilmAffinity(widget.movie.id.toString());
     return voteFilmAffinity;
   }
 
   Future<String> voteRottenTomatoes(String idMovie) async {
     String voteRottenTomatoes =
-        await TMDBApiService().voteRottenTomatoes(movie.id.toString());
+        await TMDBApiService().voteRottenTomatoes(widget.movie.id.toString());
     return voteRottenTomatoes;
   }
 }

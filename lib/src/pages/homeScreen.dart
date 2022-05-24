@@ -21,6 +21,7 @@ import 'package:tfgapp/src/pages/detailsTVScreen.dart';
 import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
 import 'package:tfgapp/src/pages/userProfile.dart';
+import 'package:tfgapp/src/pages/watchlistScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -74,6 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     PageRouteBuilder(
                         pageBuilder: (_, __, ___) => RecommendationScreen()));
               } else if (_paginaActual == 2) {
+              } else if (_paginaActual == 3) {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => WatchlistScreen()));
               } else if (_paginaActual == 4) {
                 Navigator.push(
                     context,

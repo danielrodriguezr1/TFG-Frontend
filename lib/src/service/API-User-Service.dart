@@ -121,4 +121,134 @@ class APIUserService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<String> existsInWatchlist(int idFilmOrShow) async {
+    try {
+      String code;
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = Uri.parse('$myUrl/existsInWatchlist/$id/$idFilmOrShow');
+        print('Api Call: $url');
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          code = "200";
+        } else {
+          code = "404";
+        }
+      });
+      return code;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<void> addToWatchlist(int idMovie) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/addFilmToWatchlist/$id';
+        print('Api Call: $url');
+
+        final response = await _dio.post(url, data: {'idFilm': idMovie});
+        return response;
+      });
+    } catch (e) {}
+  }
+
+  Future<void> deleteFromWatchlist(int idMovie) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/deleteFilmWatchlist/$id/$idMovie';
+        print('Api Call: $url');
+
+        final response = await _dio.patch(url);
+        return response;
+      });
+    } catch (e) {}
+  }
+
+  Future<List<Movie>> getWatchlistMovie() async {
+    try {
+      List<Movie> movieList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/getWatchlistFilm/$id/';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var movies = response.data["watchListFilm"] as List;
+        for (var i = 0; i < movies.length; ++i) {
+          var movie = (movies[i]["idFilm"]);
+          try {
+            final url = '$myUrl/getMovie/$movie';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+            //print(movie1["overview"]);
+            Movie movie1 = Movie.fromJson(response.data);
+
+            movieList.add(movie1);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      print(movieList);
+      return movieList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<void> addToWatchlistTV(int idShow) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/addShowToWatchlist/$id';
+        print('Api Call: $url');
+
+        final response = await _dio.post(url, data: {'idShow': idShow});
+        return response;
+      });
+    } catch (e) {}
+  }
+
+  Future<void> deleteFromWatchlistTV(int idShow) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/deleteShowWatchlist/$id/$idShow';
+        print('Api Call: $url');
+
+        final response = await _dio.patch(url);
+        return response;
+      });
+    } catch (e) {}
+  }
+
+  Future<List<TV>> getWatchlistTV() async {
+    try {
+      List<TV> tvList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/getWatchlistShow/$id/';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var shows = response.data["watchListShow"] as List;
+        for (var i = 0; i < shows.length; ++i) {
+          var tv = (shows[i]["idShow"]);
+          try {
+            final url = '$myUrl/getTV/$tv';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            TV tv1 = TV.fromJson(response.data);
+
+            tvList.add(tv1);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      print(tvList);
+      return tvList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }
