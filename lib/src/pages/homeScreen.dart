@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => UserProfileScreen()));
+                        pageBuilder: (_, __, ___) => UserProfileScreen("0")));
               }
             });
           },

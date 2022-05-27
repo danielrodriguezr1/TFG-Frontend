@@ -92,7 +92,7 @@ class _RecommendationScreenState extends State<RecommendationScreen>
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => UserProfileScreen()));
+                          pageBuilder: (_, __, ___) => UserProfileScreen("0")));
                 }
               });
             },

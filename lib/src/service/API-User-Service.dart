@@ -251,4 +251,76 @@ class APIUserService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<Map<String, dynamic>> getUserByNickname(String nickname) async {
+    try {
+      final url = '$myUrl/userByNickname/$nickname/';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      Map<String, dynamic> user = response.data as Map<String, dynamic>;
+      //print(user);
+      //print(user["user"]["email"]);
+      return user;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserByID(String id) async {
+    try {
+      final url = '$myUrl/users/$id/';
+      print('Api Call: $url');
+      final response = await _dio.get(url);
+      Map<String, dynamic> user = response.data as Map<String, dynamic>;
+      //print(user);
+      //print(user["user"]["email"]);
+      return user;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<void> followUser(String id1) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/$id1/follow';
+        print('Api Call: $url');
+        final response = await _dio.put(url, data: {"userId": id});
+        print(response.data);
+      });
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<void> unfollowUser(String id1) async {
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/$id1/unfollow';
+        print('Api Call: $url');
+        final response = await _dio.put(url, data: {"userId": id});
+        print(response.data);
+      });
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> checkIfFollow(String id1) async {
+    try {
+      String code;
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/checkIfFollow/$id1/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        //print(response.data);
+        code = response.statusCode.toString();
+      });
+      return code;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }

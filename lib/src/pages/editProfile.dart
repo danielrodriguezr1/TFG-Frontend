@@ -381,7 +381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .updateUser(name, lastname, nickname, email, about, profileImage);
     print(status);
     Navigator.push(context,
-        PageRouteBuilder(pageBuilder: (_, __, ___) => UserProfileScreen()));
+        PageRouteBuilder(pageBuilder: (_, __, ___) => UserProfileScreen("0")));
   }
 
   Widget buildTextField(String labelText, String placeholder) {

@@ -154,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => UserProfileScreen()));
+                          pageBuilder: (_, __, ___) => UserProfileScreen("0")));
                 } else if (_paginaActual == 0) {}
               });
             },

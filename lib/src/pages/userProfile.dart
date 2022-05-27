@@ -6,10 +6,14 @@ import 'package:tfgapp/src/pages/editProfile.dart';
 import 'package:tfgapp/src/pages/homeScreen.dart';
 import 'package:tfgapp/src/pages/recommendationScreen.dart';
 import 'package:tfgapp/src/pages/searchScreen.dart';
+import 'package:tfgapp/src/pages/searchUserScreen.dart';
+import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/storage/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class UserProfileScreen extends StatefulWidget {
+  final String id;
+  const UserProfileScreen(this.id);
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
@@ -24,36 +28,64 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String profileImage = '';
   List followers = [];
   List followings = [];
+
   //String photoUrl = '';
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      SecureStorage.readSecureStorage('App_UserID').then((id) {
-        var url =
-            Uri.parse('https://api-danielrodriguez.herokuapp.com/users/' + id);
-        print(url.toString());
-        http.get(url).then((res) {
-          print("CODEEEE ${res.statusCode}");
-          if (res.statusCode == 200) {
-            Map<String, dynamic> body = jsonDecode(res.body);
-            Map<String, dynamic> user = body["user"];
-            setState(() {
-              name = user["name"];
-              lastname = user["lastname"];
-              nickname = user["nickname"];
-              email = user["email"];
-              about = user["about"];
-              profileImage = user["profileImage"];
-              followers = user["followers"];
-              followings = user["followings"];
-              print(profileImage);
-              print(nickname);
-              print(followers.length);
-              //photoUrl = user["profileImage"];
-            });
-          } else {
-            print(res.statusCode);
+      if (widget.id == "0") {
+        SecureStorage.readSecureStorage('App_UserID').then((id) {
+          var url = Uri.parse(
+              'https://api-danielrodriguez.herokuapp.com/users/' + id);
+          print(url.toString());
+          http.get(url).then((res) {
+            print("CODEEEE ${res.statusCode}");
+            if (res.statusCode == 200) {
+              Map<String, dynamic> body = jsonDecode(res.body);
+              Map<String, dynamic> user = body["user"];
+              setState(() {
+                name = user["name"];
+                lastname = user["lastname"];
+                nickname = user["nickname"];
+                email = user["email"];
+                about = user["about"];
+                profileImage = user["profileImage"];
+                followers = user["followers"];
+                followings = user["followings"];
+                print(profileImage);
+                print(nickname);
+                print(followers.length);
+                //photoUrl = user["profileImage"];
+              });
+            } else {
+              print(res.statusCode);
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
+                      content: SingleChildScrollView(
+                          child: ListBody(
+                        children: <Widget>[
+                          Text("Error_de_xarxa",
+                              style: TextStyle(fontSize: 20)),
+                        ],
+                      )),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text("Acceptar",
+                              style: TextStyle(color: Colors.black)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            }
+          }).catchError((err) {
+            //Sale error por pantalla
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -62,7 +94,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     content: SingleChildScrollView(
                         child: ListBody(
                       children: <Widget>[
-                        Text("Error_de_xarxa", style: TextStyle(fontSize: 20)),
+                        Text("Error_de_xarxa",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
                       ],
                     )),
                     actions: <Widget>[
@@ -76,34 +110,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ],
                   );
                 });
-          }
-        }).catchError((err) {
-          //Sale error por pantalla
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
-                  content: SingleChildScrollView(
-                      child: ListBody(
-                    children: <Widget>[
-                      Text("Error_de_xarxa",
-                          style: TextStyle(fontSize: 20, color: Colors.black)),
-                    ],
-                  )),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Acceptar",
-                          style: TextStyle(color: Colors.black)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              });
+          });
         });
-      });
+      } else {
+        getUserByID(widget.id);
+      }
     }
   }
 
@@ -184,6 +195,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
         selectedLabelStyle: TextStyle(fontSize: 12),
       ),
+      resizeToAvoidBottomInset: false,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -269,6 +281,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       SafeArea(
           child: Column(children: [
         Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            decoration: BoxDecoration(
+                color: Colors.black12, borderRadius: BorderRadius.circular(24)),
+            child: Row(children: [
+              GestureDetector(
+                onTap: () {
+                  print("Search Me");
+                },
+                child: Container(
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.white70,
+                  ),
+                  margin: EdgeInsets.fromLTRB(3, 0, 7, 0),
+                ),
+              ),
+              Expanded(
+                  child: TextField(
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                          hintText: "Buscar usuario"),
+                      style: TextStyle(color: Colors.white70),
+                      onSubmitted: (query) {
+                        if (query.isNotEmpty) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchUserScreen(query),
+                              ));
+                        }
+                      }))
+            ])),
+        Container(
           child: Container(
             width: double.infinity,
             height: 200,
@@ -329,6 +376,98 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         SizedBox(
           height: 10,
         ),
+        (widget.id != "0")
+            ? FutureBuilder(
+                future: checkIfFollow(widget.id),
+                builder: (context, snapshot) {
+                  if (snapshot.data == "204") {
+                    return Container(
+                      child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: Container(
+                              height: 40.0,
+                              margin: EdgeInsets.all(10),
+                              // ignore: deprecated_member_use
+                              child: RaisedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    followUser(widget.id);
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(80.0)),
+                                padding: EdgeInsets.all(0.0),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFA38A00),
+                                          Color(0xffFFED8A)
+                                        ],
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth: 150.0, maxHeight: 40.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Seguir usuario",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ))),
+                    );
+                  } else
+                    return Container(
+                      child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: Container(
+                              height: 40.0,
+                              margin: EdgeInsets.all(10),
+                              // ignore: deprecated_member_use
+                              child: RaisedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    unfollowUser(widget.id);
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(80.0)),
+                                padding: EdgeInsets.all(0.0),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFAA4A44),
+                                          Color(0xFFEE4B2B)
+                                        ],
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth: 150.0, maxHeight: 40.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Dejar de seguir",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ))),
+                    );
+                })
+            : Container(),
         SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -344,14 +483,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         SizedBox(height: 20),
       ])),
-      Container(
-        child: Align(
-            alignment: FractionalOffset.bottomCenter,
-            child: Container(
-                height: 40.0,
-                margin: EdgeInsets.all(10),
+      (widget.id == "0")
+          ? Container(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
                 // ignore: deprecated_member_use
-                child: RaisedButton(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                  ),
+                  color: Colors.white10.withOpacity(0.2),
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -366,31 +508,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                         ));
                   },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(80.0)),
-                  padding: EdgeInsets.all(0.0),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFFA38A00), Color(0xffFFED8A)],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Container(
-                      constraints:
-                          BoxConstraints(maxWidth: 150.0, maxHeight: 40.0),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Configurar perfil",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                    ),
-                  ),
-                ))),
-      ),
+                ),
+              ),
+            )
+          : Container(),
     ]);
+  }
+
+  Future<void> followUser(String id) async {
+    await APIUserService().followUser(id);
+    print("SEGUIDO CORRECTAMENTE");
+  }
+
+  Future<void> unfollowUser(String id) async {
+    await APIUserService().unfollowUser(id);
+    print("DEJADO DE SEGUIR CORRECTAMENTE");
+  }
+
+  Future<String> checkIfFollow(String id) async {
+    String code = await APIUserService().checkIfFollow(id);
+    print(code);
+    return code;
+  }
+
+  Future<void> getUserByID(String id) async {
+    Map<String, dynamic> user = await APIUserService().getUserByID(id);
+    setState(() {
+      name = user["user"]["name"];
+      lastname = user["user"]["lastname"];
+      nickname = user["user"]["nickname"];
+      email = user["user"]["email"];
+      about = user["user"]["about"];
+      profileImage = user["user"]["profileImage"];
+      followers = user["user"]["followers"];
+      followings = user["user"]["followings"];
+      print(profileImage);
+      print(nickname);
+      print(followers.length);
+      //photoUrl = user["profileImage"];
+    });
   }
 
   Widget buildButton(BuildContext context, String value, String text) =>

@@ -80,7 +80,7 @@ class _WatchlistScreenState extends State<WatchlistScreen>
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => UserProfileScreen()));
+                        pageBuilder: (_, __, ___) => UserProfileScreen("0")));
               }
             });
           },
