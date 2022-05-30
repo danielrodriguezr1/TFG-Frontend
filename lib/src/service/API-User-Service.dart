@@ -323,4 +323,124 @@ class APIUserService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<List<dynamic>> getMutuals() async {
+    List<dynamic> mutuals = [];
+
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/mutuallyFollows/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        mutuals = response.data["mutuallyFollows"] as List;
+        print(mutuals);
+      });
+      print(mutuals);
+      return mutuals;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> getMutualsNickname() async {
+    List<dynamic> mutuals = [];
+    try {
+      List mutualsList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/mutuallyFollows/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        mutuals = response.data["mutuallyFollows"] as List;
+        print("MUTUAAAAAAAAAALS $mutuals");
+        for (var i = 0; i < mutuals.length; ++i) {
+          var mutual = (mutuals[i]);
+          print("MUTUAAAAAAAL11111 $mutual");
+          try {
+            final url = '$myUrl/users/$mutual';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            var mutualNickname = response.data["user"];
+            print(mutualNickname["nickname"]);
+
+            mutualsList.add(mutualNickname["nickname"]);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      print(mutualsList);
+      return mutualsList;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<dynamic>> getMutualsImage() async {
+    List<dynamic> mutuals = [];
+    try {
+      List mutualsList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/mutuallyFollows/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        mutuals = response.data["mutuallyFollows"] as List;
+        print("MUTUAAAAAAAAAALS $mutuals");
+        for (var i = 0; i < mutuals.length; ++i) {
+          var mutual = (mutuals[i]);
+          print("MUTUAAAAAAAL11111 $mutual");
+          try {
+            final url = '$myUrl/users/$mutual';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            var mutualNickname = response.data["user"];
+            print(mutualNickname["profileImage"]);
+
+            mutualsList.add(mutualNickname["profileImage"]);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      print(mutualsList);
+      return mutualsList;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> addUserRecommendation(int idMovie, String idUser) async {
+    String code;
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/movieRecommendation/$idUser';
+        print('Api Call: $url');
+        //final response = await _dio.get(url);
+        final response =
+            await _dio.put(url, data: {"userId": id, "idFilm": idMovie});
+        code = response.statusCode.toString();
+      });
+      return code;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<String> addUserRecommendationShow(int idShow, String idUser) async {
+    String code;
+    try {
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/showRecommendation/$idUser';
+        print('Api Call: $url');
+        //final response = await _dio.get(url);
+        final response =
+            await _dio.put(url, data: {"userId": id, "idShow": idShow});
+        code = response.statusCode.toString();
+      });
+      return code;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }

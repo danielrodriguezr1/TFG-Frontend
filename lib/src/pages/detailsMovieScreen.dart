@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tfgapp/src/models/movie.dart';
 import 'package:tfgapp/src/service/API-User-Service.dart';
 import 'package:tfgapp/src/service/TMDB-Api_service.dart';
@@ -16,6 +17,9 @@ class DetailsMovieScreen extends StatefulWidget {
 }
 
 class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
+  List<dynamic> mutuals = [];
+  List<dynamic> mutualsNickname = [];
+  List<dynamic> mutualsImage = [];
   @override
   void initState() {
     super.initState();
@@ -417,7 +421,92 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                           SizedBox(height: 10),
                           // ignore: deprecated_member_use
                           RaisedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(40)),
+                                    elevation: 16,
+                                    child: Container(
+                                      height: 400.0,
+                                      width: 400.0,
+                                      child: FutureBuilder(
+                                          future: getMutuals(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              if (mutuals.length > 0) {
+                                                return ListView.separated(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  separatorBuilder:
+                                                      (context, index) {
+                                                    return Divider();
+                                                  },
+                                                  itemCount: mutuals.length,
+                                                  shrinkWrap: true,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Container(
+                                                        child: ListTile(
+                                                      leading: Container(
+                                                        width: 50,
+                                                        height: 100,
+                                                        decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            image: DecorationImage(
+                                                                fit: BoxFit.cover,
+                                                                image: NetworkImage(
+                                                                  mutualsImage[
+                                                                      index],
+                                                                ))),
+                                                      ),
+                                                      title: Text(
+                                                        mutualsNickname[index],
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          //fontWeight: Constants.bolder,
+                                                          //fontSize: Constants.l(context)
+                                                        ),
+                                                      ),
+                                                      onTap: () {
+                                                        print(mutuals[index]
+                                                            .toString());
+                                                        addUserRecommendation(
+                                                            widget.movie.id,
+                                                            mutuals[index]
+                                                                .toString());
+                                                      },
+                                                    ));
+                                                  },
+                                                );
+                                              } else
+                                                return Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 25.0,
+                                                            right: 25.0),
+                                                    child: Text(
+                                                        "No te sigues con ningun usuario mutuamente para poder recomendarle una película.",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white70)),
+                                                  ),
+                                                );
+                                            } else
+                                              return Container();
+                                          }),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(80.0)),
                             padding: EdgeInsets.all(0.0),
@@ -444,7 +533,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                                 ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -695,6 +784,51 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             ],
           ),
         ));
+  }
+
+  Future<void> addUserRecommendation(int idMovie, String idUser) async {
+    String code = await APIUserService().addUserRecommendation(idMovie, idUser);
+    print("CODEEEEEEEEEEEEE $code");
+    if (code == "200")
+      Fluttertoast.showToast(
+        msg: 'Película recomendada correctamente.',
+      );
+    else
+      Fluttertoast.showToast(
+        msg: 'A este usuario ya se le ha recomendado esta película.',
+      );
+  }
+
+  Future<List> getMutuals() async {
+    List<dynamic> mutualsList = await APIUserService().getMutuals();
+    print("MUTUALS");
+    print(mutualsList);
+    setState(() {
+      mutuals = mutualsList;
+    });
+    await getMutualsNickname();
+    return mutuals;
+  }
+
+  Future<List> getMutualsNickname() async {
+    List<dynamic> mutualsList = await APIUserService().getMutualsNickname();
+    print("MUTUALS");
+    print(mutualsList);
+    setState(() {
+      mutualsNickname = mutualsList;
+    });
+    await getMutualsImage();
+    return mutuals;
+  }
+
+  Future<List> getMutualsImage() async {
+    List<dynamic> mutualsList = await APIUserService().getMutualsImage();
+    print("MUTUALS");
+    print(mutualsList);
+    setState(() {
+      mutualsImage = mutualsList;
+    });
+    return mutuals;
   }
 
   Future<void> addToWatchlist(int idMovie) async {
