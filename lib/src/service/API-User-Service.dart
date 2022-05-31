@@ -443,4 +443,127 @@ class APIUserService {
       throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
     }
   }
+
+  Future<List<Movie>> getRecommendationsUser() async {
+    try {
+      List<Movie> movieList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/users/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var movies = response.data["user"]["movieRecommendations"] as List;
+        print(movies);
+        for (var i = 0; i < movies.length; ++i) {
+          var movie = (movies[i]);
+          try {
+            final url = '$myUrl/getMovie/$movie';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            Movie movie1 = Movie.fromJson(response.data);
+
+            movieList.add(movie1);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+        //movieList = movies.map((m) => Movie.fromJson(m)).toList();
+      });
+      return movieList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List<TV>> getRecommendationsUserTV() async {
+    try {
+      List<TV> showList = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/users/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        var shows = response.data["user"]["showRecommendations"] as List;
+        print(shows);
+        for (var i = 0; i < shows.length; ++i) {
+          var show = (shows[i]);
+          try {
+            final url = '$myUrl/getTV/$show';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            TV tv1 = TV.fromJson(response.data);
+
+            showList.add(tv1);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      return showList;
+    } catch (error, stacktrace) {
+      print(error);
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List> getUserListRecommendations() async {
+    try {
+      List listUsers = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/users/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        print(response.data["user"]["movieReccomendationsUsers"]);
+        var users = response.data["user"]["movieReccomendationsUsers"] as List;
+        for (var i = 0; i < users.length; ++i) {
+          var user = (users[i]);
+          try {
+            final url = '$myUrl/users/$user';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            var nickname = response.data["user"]["nickname"];
+
+            listUsers.add(nickname);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      return listUsers;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
+
+  Future<List> getUserListRecommendationsTV() async {
+    try {
+      List listUsers = [];
+      await SecureStorage.readSecureStorage('App_UserID').then((id) async {
+        final url = '$myUrl/users/$id';
+        print('Api Call: $url');
+        final response = await _dio.get(url);
+        print(response.data["user"]["showReccomendationsUsers"]);
+        var users = response.data["user"]["showReccomendationsUsers"] as List;
+        for (var i = 0; i < users.length; ++i) {
+          var user = (users[i]);
+          try {
+            final url = '$myUrl/users/$user';
+            print('Api Call: $url');
+            final response = await _dio.get(url);
+
+            var nickname = response.data["user"]["nickname"];
+
+            listUsers.add(nickname);
+          } catch (e) {
+            throw Exception('Excepció ocurrida: $e ');
+          }
+        }
+      });
+      return listUsers;
+    } catch (error, stacktrace) {
+      throw Exception('Excepció ocurrida: $error amb trackace: $stacktrace');
+    }
+  }
 }
